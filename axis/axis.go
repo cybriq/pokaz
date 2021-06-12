@@ -1,8 +1,9 @@
 package axis
 
 import (
-	"github.com/l0k18/pokaz/constraints"
 	"image"
+
+	"github.com/cybriq/pokaz/constraints"
 )
 
 // Axis defines the direction of a widget with multiple elements

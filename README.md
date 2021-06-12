@@ -1,6 +1,6 @@
 # pokaz
 
-Layout and widget toolkit for [giocore](https://github.com/l0k18/giocore)
+Layout and widget toolkit for [giocore](https://github.com/cybriq/giocore)
 
 ## About
 

@@ -1,10 +1,11 @@
 package direction
 
 import (
-	"github.com/l0k18/giocore/op"
-	"github.com/l0k18/pokaz/constraints"
-	"github.com/l0k18/pokaz/outline"
 	"image"
+
+	"github.com/cybriq/giocore/op"
+	"github.com/cybriq/pokaz/constraints"
+	"github.com/cybriq/pokaz/outline"
 )
 
 type Direction uint8

@@ -1,13 +1,14 @@
 package outline
 
 import (
-	"github.com/l0k18/giocore/f32"
-	"github.com/l0k18/giocore/io/event"
-	"github.com/l0k18/giocore/io/system"
-	"github.com/l0k18/giocore/op"
-	"github.com/l0k18/giocore/unit"
-	"github.com/l0k18/pokaz/constraints"
 	"time"
+
+	"github.com/cybriq/giocore/f32"
+	"github.com/cybriq/giocore/io/event"
+	"github.com/cybriq/giocore/io/system"
+	"github.com/cybriq/giocore/op"
+	"github.com/cybriq/giocore/unit"
+	"github.com/cybriq/pokaz/constraints"
 )
 
 // Context carries the state needed by almost all layouts and widgets.

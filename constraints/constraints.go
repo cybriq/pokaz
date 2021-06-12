@@ -1,8 +1,9 @@
 package constraints
 
 import (
-	"github.com/l0k18/giocore/f32"
 	"image"
+
+	"github.com/cybriq/giocore/f32"
 )
 
 // Constraints define the minimum and maximum dimensions of a layout area
