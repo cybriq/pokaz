@@ -1,4 +1,4 @@
-package dimensions
+package dims
 
 import "image"
 

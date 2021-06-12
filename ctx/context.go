@@ -1,4 +1,4 @@
-package context
+package ctx
 
 import (
 	"time"
@@ -8,16 +8,16 @@ import (
 	"github.com/cybriq/giocore/io/system"
 	"github.com/cybriq/giocore/op"
 	"github.com/cybriq/giocore/unit"
-	"github.com/cybriq/pokaz/constraints"
+	"github.com/cybriq/pokaz/cnst"
 )
 
 // Context carries the state needed by almost all layouts and widgets. A zero
 // value Context never returns events, map units to pixels with a scale of 1.0,
 // and returns the zero time from Now.
 type Context struct {
-	// Constraints track the constraints for the active widget or
+	// Constraints track the cnst for the active widget or
 	// layout.
-	Constraints constraints.Constraints
+	Constraints cnst.Constraints
 
 	Metric unit.Metric
 	// By convention, a nil Queue is a signal to widgets to draw themselves in a
@@ -29,7 +29,7 @@ type Context struct {
 	*op.Ops
 }
 
-// NewContext is a shorthand for
+// New is a shorthand for
 //
 //   Context{
 //     Ops: ops,
@@ -39,8 +39,8 @@ type Context struct {
 //     Constraints: Exact(e.Size),
 //   }
 //
-// NewContext calls ops.Reset and adjusts ops for e.Insets.
-func NewContext(ops *op.Ops, e system.FrameEvent) Context {
+// New calls ops.Reset and adjusts ops for e.Insets.
+func New(ops *op.Ops, e system.FrameEvent) Context {
 	ops.Reset()
 
 	size := e.Size
@@ -64,7 +64,7 @@ func NewContext(ops *op.Ops, e system.FrameEvent) Context {
 		Now:         e.Now,
 		Queue:       e.Queue,
 		Metric:      e.Metric,
-		Constraints: constraints.Exact(size),
+		Constraints: cnst.Exact(size),
 	}
 }
 
@@ -82,7 +82,7 @@ func (c Context) Events(k event.Tag) []event.Event {
 	return c.Queue.Events(k)
 }
 
-// Disabled returns a copy of this context with a nil Queue, blocking events to
+// Disabled returns a copy of this ctx with a nil Queue, blocking events to
 // widgets using it.
 //
 // By convention, a nil Queue is a signal to widgets to draw themselves in a
