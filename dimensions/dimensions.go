@@ -1,4 +1,4 @@
-package outline
+package dimensions
 
 import "image"
 

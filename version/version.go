@@ -12,12 +12,12 @@ var (
 	// GitRef is the gitref, as in refs/heads/branchname
 	GitRef = "refs/heads/master"
 	// GitCommit is the commit hash of the current HEAD
-	GitCommit = "b591178d734712f0c1200c717f356a97576d51b5"
+	GitCommit = "b7fa1dba916eda023709e49bbd1f9b2ae6ed4e87"
 	// BuildTime stores the time when the current binary was built
-	BuildTime = "2021-06-12T10:08:40+03:00"
+	BuildTime = "2021-06-12T10:38:31+03:00"
 	// Tag lists the Tag on the build, adding a + to the newest Tag if the commit is
 	// not that commit
-	Tag = "+"
+	Tag = ""
 	// PathBase is the path base returned from runtime caller
 	PathBase = "/home/loki/src/github.com/cybriq/pokaz/"
 	// Major is the major number from the tag

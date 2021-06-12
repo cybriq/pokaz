@@ -12,8 +12,8 @@ github.com/creack/pty v1.1.7/go.mod h1:lj5s0c3V2DBrqTV7llrYr5NG6My20zk30Fl46Y7Do
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
 github.com/cybriq/atomic v1.7.2 h1:PZTgfAsZ1p5gibHkSOF+FknP6hSOpNwyTiNMshLj2t0=
 github.com/cybriq/atomic v1.7.2/go.mod h1:2J1FY5UCMMkq22p/BZty4IcMHAcm9U5IiCDmgts8fpM=
-github.com/cybriq/giocore v0.0.2 h1:/xfaMCNDMFLFGeeK4Y1iWMoJbGkuZ3zYHv6Mdjs6J80=
-github.com/cybriq/giocore v0.0.2/go.mod h1:H8RUTa3Op0wJMOIjkojoLCB2xn5BT1KEjkh4T9jgP4E=
+github.com/cybriq/giocore v0.0.3 h1:j0X/o4rRbVmlSlsh4iFt4Dyl86u5NypaXY+jgPzficc=
+github.com/cybriq/giocore v0.0.3/go.mod h1:H8RUTa3Op0wJMOIjkojoLCB2xn5BT1KEjkh4T9jgP4E=
 github.com/cybriq/log v0.0.6 h1:tCj1Vr4GfJ3atroHjyqryAebyPEZwhnVpU9NOYeEKgw=
 github.com/cybriq/log v0.0.6/go.mod h1:3CDJWMLBxS6boxkGsQhFpFFKatSwr3+sTVk28iNGnEE=
 github.com/cybriq/qu v0.0.19 h1:cDQIxStlQTMeIuFEjtalfhV0V3Zv31+d+Jys9djEq20=
