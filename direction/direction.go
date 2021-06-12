@@ -5,7 +5,9 @@ import (
 
 	"github.com/cybriq/giocore/op"
 	"github.com/cybriq/pokaz/constraints"
-	"github.com/cybriq/pokaz/outline"
+	"github.com/cybriq/pokaz/context"
+	"github.com/cybriq/pokaz/dimensions"
+	"github.com/cybriq/pokaz/widget"
 )
 
 type Direction uint8
@@ -35,11 +37,11 @@ func (d Direction) String() string {
 	return Directions[d]
 }
 
-// Layout a widget according to the direction.
-// The widget is called with the context constraints minimum cleared.
-func (d Direction) Layout(
-	gtx outline.Context, w outline.Widget,
-) outline.Dimensions {
+// Fn lays out a widget according to the direction. The widget is called with
+// the context constraints minimum cleared.
+func (d Direction) Fn(
+	gtx context.Context, w widget.Widget,
+) dimensions.Dimensions {
 	macro := op.Record(gtx.Ops)
 	cs := gtx.Constraints
 	gtx.Constraints.Min = image.Point{}
@@ -58,7 +60,7 @@ func (d Direction) Layout(
 	op.Offset(constraints.FPt(p)).Add(gtx.Ops)
 	call.Add(gtx.Ops)
 
-	return outline.Dimensions{
+	return dimensions.Dimensions{
 		Size:     sz,
 		Baseline: dims.Baseline + sz.Y - dims.Size.Y - p.Y,
 	}
