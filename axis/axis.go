@@ -3,10 +3,10 @@ package axis
 import (
 	"image"
 
-	"github.com/cybriq/pokaz/constraints"
+	"github.com/cybriq/pokaz/cnst"
 )
 
-// Axis defines the direction of a widget with multiple elements
+// Axis defines the dir of a widget with multiple elements
 type Axis uint8
 
 const (
@@ -25,7 +25,7 @@ func (a Axis) Convert(pt image.Point) image.Point {
 }
 
 // MainConstraint returns the min and max main Constraints for axis a
-func (a Axis) MainConstraint(cs constraints.Constraints) (int, int) {
+func (a Axis) MainConstraint(cs cnst.Constraints) (int, int) {
 	if a == Horizontal {
 		return cs.Min.X, cs.Max.X
 	}
@@ -33,7 +33,7 @@ func (a Axis) MainConstraint(cs constraints.Constraints) (int, int) {
 }
 
 // CrossConstraint returns the min and max cross Constraints for axis a
-func (a Axis) CrossConstraint(cs constraints.Constraints) (int, int) {
+func (a Axis) CrossConstraint(cs cnst.Constraints) (int, int) {
 	if a == Horizontal {
 		return cs.Min.Y, cs.Max.Y
 	}
@@ -41,14 +41,14 @@ func (a Axis) CrossConstraint(cs constraints.Constraints) (int, int) {
 }
 
 // Constraints return the Constraints for axis a
-func (a Axis) Constraints(mainMin, mainMax, crossMin, crossMax int) constraints.Constraints {
+func (a Axis) Constraints(mainMin, mainMax, crossMin, crossMax int) cnst.Constraints {
 	if a == Horizontal {
-		return constraints.Constraints{
+		return cnst.Constraints{
 			Min: image.Pt(mainMin, crossMin),
 			Max: image.Pt(mainMax, crossMax),
 		}
 	}
-	return constraints.Constraints{
+	return cnst.Constraints{
 		Min: image.Pt(crossMin, mainMin),
 		Max: image.Pt(crossMax, mainMax),
 	}
