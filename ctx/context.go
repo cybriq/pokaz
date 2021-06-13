@@ -15,8 +15,7 @@ import (
 // value Context never returns events, map units to pixels with a scale of 1.0,
 // and returns the zero time from Now.
 type Context struct {
-	// Constraints track the cnst for the active widget or
-	// layout.
+	// Constraints track the constraints for the active widget or layout.
 	Constraints cnst.Constraints
 
 	Metric unit.Metric

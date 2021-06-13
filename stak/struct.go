@@ -13,11 +13,10 @@ import (
 	"github.com/cybriq/pokaz/wdg"
 )
 
-// stack lays out child elements on top of each other,
-// according to an alignment dir.
+// stack lays out child elements on top of each other, according to an alignment
+// dir.
 type stack struct {
-	// alignment is the dir to align children
-	// smaller than the available space.
+	// alignment is the dir to align children smaller than the available space.
 	alignment dir.Direction
 }
 
@@ -31,17 +30,17 @@ type child struct {
 	dims dims.Dimensions
 }
 
-// stacked returns a stack child that is laid out with no minimum
-// cnst and the maximum cnst passed to stack.layout.
+// stacked returns a stack child that is laid out with no minimum constraints
+// and maximum constraints passed to stack.layout.
 func stacked(w wdg.Widget) child {
 	return child{
 		widget: w,
 	}
 }
 
-// expanded returns a stack child with the minimum cnst set
-// to the largest stacked child. The maximum cnst are set to
-// the same as passed to stack.layout.
+// expanded returns a stack child with the minimum constraints set to the
+// largest stacked child. The maximum constraints are set to the same as passed
+// to stack.layout.
 func expanded(w wdg.Widget) child {
 	return child{
 		expanded: true,
@@ -49,7 +48,7 @@ func expanded(w wdg.Widget) child {
 	}
 }
 
-// layout a stak of children. The position of the children are
+// layout a stack of children. The position of the children are
 // determined by the specified order, but stacked children are laid out
 // before expanded children.
 func (s stack) layout(

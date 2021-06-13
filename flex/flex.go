@@ -9,8 +9,7 @@ import (
 )
 
 type Flex struct {
-	flex     flex
-	ctx      *ctx.Context
+	flex
 	children []child
 }
 
@@ -20,39 +19,20 @@ func New() (out *Flex) {
 }
 
 // VFlex creates a new vertical flex layout
-func (th *Flex) VFlex() (out *Flex) {
+func (f *Flex) VFlex() (out *Flex) {
 	return new(Flex).Vertical()
 }
 
 // alignment setters
 
-// AlignStart sets alignment for layout from Start
-func (f *Flex) AlignStart() (out *Flex) {
-	f.flex.alignment = align.Start
-	return f
-}
-
-// AlignEnd sets alignment for layout from End
-func (f *Flex) AlignEnd() (out *Flex) {
-	f.flex.alignment = align.End
-	return f
-}
-
-// AlignMiddle sets alignment for layout from Middle
-func (f *Flex) AlignMiddle() (out *Flex) {
-	f.flex.alignment = align.Middle
-	return f
-}
-
-// AlignBaseline sets alignment for layout from Baseline
-func (f *Flex) AlignBaseline() (out *Flex) {
-	f.flex.alignment = align.Baseline
+func (f *Flex) Align(alignment align.Alignment) (out *Flex) {
+	f.flex.alignment = alignment
 	return f
 }
 
 // axis setters
 
-// Vertical sets axis to vertical, otherwise it is horizontal
+// Vertical sets the axis to vertical, otherwise it is horizontal
 func (f *Flex) Vertical() (out *Flex) {
 	f.flex.axis = axis.Vertical
 	return f
@@ -60,39 +40,8 @@ func (f *Flex) Vertical() (out *Flex) {
 
 // spacing setters
 
-// SpaceStart sets the corresponding flex spacing parameter
-func (f *Flex) SpaceStart() (out *Flex) {
-	f.flex.spacing = SpaceStart
-	return f
-}
-
-// SpaceEnd sets the corresponding flex spacing parameter
-func (f *Flex) SpaceEnd() (out *Flex) {
-	f.flex.spacing = SpaceEnd
-	return f
-}
-
-// SpaceSides sets the corresponding flex spacing parameter
-func (f *Flex) SpaceSides() (out *Flex) {
-	f.flex.spacing = SpaceSides
-	return f
-}
-
-// SpaceAround sets the corresponding flex spacing parameter
-func (f *Flex) SpaceAround() (out *Flex) {
-	f.flex.spacing = SpaceAround
-	return f
-}
-
-// SpaceBetween sets the corresponding flex spacing parameter
-func (f *Flex) SpaceBetween() (out *Flex) {
-	f.flex.spacing = SpaceBetween
-	return f
-}
-
-// SpaceEvenly sets the corresponding flex spacing parameter
-func (f *Flex) SpaceEvenly() (out *Flex) {
-	f.flex.spacing = SpaceEvenly
+func (f *Flex) Space(spc Spacing) (out *Flex) {
+	f.flex.spacing = spc
 	return f
 }
 

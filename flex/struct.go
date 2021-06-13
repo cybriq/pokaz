@@ -14,19 +14,17 @@ import (
 	"github.com/cybriq/pokaz/wdg"
 )
 
-// flex lays out child elements along an axis,
-// according to alignment and weights.
+// flex lays out child elements along an axis, according to alignment and
+// weights.
 type flex struct {
 	// axis is the main axis, either Horizontal or Vertical.
 	axis axis.Axis
-	// spacing controls the distribution of space left after
-	// layout.
+	// spacing controls the distribution of space left after layout.
 	spacing Spacing
 	// alignment is the alignment in the cross axis.
 	alignment align.Alignment
-	// weightSum is the sum of weights used for the weighted
-	// size of flexed children. If weightSum is zero, the sum
-	// of all flexed weights is used.
+	// weightSum is the sum of weights used for the weighted size of flexed
+	// children. If weightSum is zero, the sum of all flexed weights is used.
 	weightSum float32
 }
 
@@ -46,35 +44,33 @@ type child struct {
 type Spacing uint8
 
 const (
-	// SpaceEnd leaves space at the end.
-	SpaceEnd Spacing = iota
-	// SpaceStart leaves space at the start.
-	SpaceStart
-	// SpaceSides shares space between the start and end.
-	SpaceSides
-	// SpaceAround distributes space evenly between children,
-	// with half as much space at the start and end.
-	SpaceAround
-	// SpaceBetween distributes space evenly between children,
-	// leaving no space at the start and end.
-	SpaceBetween
-	// SpaceEvenly distributes space evenly between children and
+	// End leaves space at the end.
+	End Spacing = iota
+	// Start leaves space at the start.
+	Start
+	// Sides share space between the start and end.
+	Sides
+	// Around distributes space evenly between children, with half as much space
 	// at the start and end.
-	SpaceEvenly
+	Around
+	// Between distributes space evenly between children, leaving no space at
+	// the start and end.
+	Between
+	// Evenly distributes space evenly between children and at the start and
+	// end.
+	Evenly
 )
 
-// rigid returns a flex child with a maximal constraint of the
-// remaining space.
+// rigid returns a flex child with a maximal constraint of the remaining space.
 func rigid(widget wdg.Widget) child {
 	return child{
 		widget: widget,
 	}
 }
 
-// flexed returns a flex child forced to take up weight fraction of the
-// space left over from rigid children. The fraction is weight
-// divided by either the weight sum of all flexed children or the flex
-// weightSum if non zero.
+// flexed returns a flex child forced to take up weight fraction of the space
+// left over from rigid children. The fraction is weight divided by either the
+// weight sum of all flexed children, or the flex weightSum if it is nonzero.
 func flexed(weight float32, widget wdg.Widget) child {
 	return child{
 		flex:   true,
@@ -83,9 +79,8 @@ func flexed(weight float32, widget wdg.Widget) child {
 	}
 }
 
-// layout a list of children. The position of the children are
-// determined by the specified order, but rigid children are laid out
-// before flexed children.
+// layout a list of children. The position of the children are determined by the
+// specified order, but rigid children are laid out before flexed children.
 func (f flex) layout(gtx ctx.Context, children ...child) dims.Dimensions {
 	size := 0
 	cs := gtx.Constraints
@@ -101,17 +96,18 @@ func (f flex) layout(gtx ctx.Context, children ...child) dims.Dimensions {
 			continue
 		}
 		macro := op.Record(gtx.Ops)
-		cgtx.Constraints = f.axis.Constraints(0, remaining, crossMin, crossMax)
-		dims := child.widget(cgtx)
+		cgtx.Constraints = f.axis.
+			Constraints(0, remaining, crossMin, crossMax)
+		dm := child.widget(cgtx)
 		c := macro.Stop()
-		sz := f.axis.Convert(dims.Size).X
+		sz := f.axis.Convert(dm.Size).X
 		size += sz
 		remaining -= sz
 		if remaining < 0 {
 			remaining = 0
 		}
 		children[i].call = c
-		children[i].dims = dims
+		children[i].dims = dm
 	}
 	if w := f.weightSum; w != 0 {
 		totalWeight = w
@@ -138,16 +134,16 @@ func (f flex) layout(gtx ctx.Context, children ...child) dims.Dimensions {
 		macro := op.Record(gtx.Ops)
 		cgtx.Constraints = f.axis.Constraints(flexSize, flexSize, crossMin,
 			crossMax)
-		dims := child.widget(cgtx)
+		dm := child.widget(cgtx)
 		c := macro.Stop()
-		sz := f.axis.Convert(dims.Size).X
+		sz := f.axis.Convert(dm.Size).X
 		size += sz
 		remaining -= sz
 		if remaining < 0 {
 			remaining = 0
 		}
 		children[i].call = c
-		children[i].dims = dims
+		children[i].dims = dm
 	}
 	var maxCross int
 	var maxBaseline int
@@ -165,26 +161,26 @@ func (f flex) layout(gtx ctx.Context, children ...child) dims.Dimensions {
 	}
 	var mainSize int
 	switch f.spacing {
-	case SpaceSides:
+	case Sides:
 		mainSize += space / 2
-	case SpaceStart:
+	case Start:
 		mainSize += space
-	case SpaceEvenly:
+	case Evenly:
 		mainSize += space / (1 + len(children))
-	case SpaceAround:
+	case Around:
 		if len(children) > 0 {
 			mainSize += space / (len(children) * 2)
 		}
 	}
 	for i, child := range children {
-		dims := child.dims
-		b := dims.Size.Y - dims.Baseline
+		dm := child.dims
+		b := dm.Size.Y - dm.Baseline
 		var cross int
 		switch f.alignment {
 		case align.End:
-			cross = maxCross - f.axis.Convert(dims.Size).Y
+			cross = maxCross - f.axis.Convert(dm.Size).Y
 		case align.Middle:
-			cross = (maxCross - f.axis.Convert(dims.Size).Y) / 2
+			cross = (maxCross - f.axis.Convert(dm.Size).Y) / 2
 		case align.Baseline:
 			if f.axis == axis.Horizontal {
 				cross = maxBaseline - b
@@ -195,16 +191,16 @@ func (f flex) layout(gtx ctx.Context, children ...child) dims.Dimensions {
 		op.Offset(coord.FPt(pt)).Add(gtx.Ops)
 		child.call.Add(gtx.Ops)
 		stack.Load()
-		mainSize += f.axis.Convert(dims.Size).X
+		mainSize += f.axis.Convert(dm.Size).X
 		if i < len(children)-1 {
 			switch f.spacing {
-			case SpaceEvenly:
+			case Evenly:
 				mainSize += space / (1 + len(children))
-			case SpaceAround:
+			case Around:
 				if len(children) > 0 {
 					mainSize += space / len(children)
 				}
-			case SpaceBetween:
+			case Between:
 				if len(children) > 1 {
 					mainSize += space / (len(children) - 1)
 				}
@@ -212,13 +208,13 @@ func (f flex) layout(gtx ctx.Context, children ...child) dims.Dimensions {
 		}
 	}
 	switch f.spacing {
-	case SpaceSides:
+	case Sides:
 		mainSize += space / 2
-	case SpaceEnd:
+	case End:
 		mainSize += space
-	case SpaceEvenly:
+	case Evenly:
 		mainSize += space / (1 + len(children))
-	case SpaceAround:
+	case Around:
 		if len(children) > 0 {
 			mainSize += space / (len(children) * 2)
 		}
@@ -229,18 +225,18 @@ func (f flex) layout(gtx ctx.Context, children ...child) dims.Dimensions {
 
 func (s Spacing) String() string {
 	switch s {
-	case SpaceEnd:
-		return "SpaceEnd"
-	case SpaceStart:
-		return "SpaceStart"
-	case SpaceSides:
-		return "SpaceSides"
-	case SpaceAround:
-		return "SpaceAround"
-	case SpaceBetween:
-		return "SpaceAround"
-	case SpaceEvenly:
-		return "SpaceEvenly"
+	case End:
+		return "End"
+	case Start:
+		return "Start"
+	case Sides:
+		return "Sides"
+	case Around:
+		return "Around"
+	case Between:
+		return "Around"
+	case Evenly:
+		return "Evenly"
 	default:
 		panic("unreachable")
 	}
