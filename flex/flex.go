@@ -4,60 +4,62 @@ import (
 	"github.com/cybriq/pokaz/align"
 	"github.com/cybriq/pokaz/axis"
 	"github.com/cybriq/pokaz/ctx"
-	"github.com/cybriq/pokaz/dims"
+	"github.com/cybriq/pokaz/dim"
 	"github.com/cybriq/pokaz/wdg"
 )
 
-type Flex struct {
+// Layout is a horizontal or vertical stack of widgets with fixed and expanding
+// boxes
+type Layout struct {
 	flex
 	children []child
 }
 
-// New creates a new flex layout
-func New() (out *Flex) {
-	return new(Flex)
+// Flex creates a new flex.Layout
+func Flex() (out *Layout) {
+	return new(Layout)
 }
 
 // VFlex creates a new vertical flex layout
-func (f *Flex) VFlex() (out *Flex) {
-	return new(Flex).Vertical()
+func VFlex() (out *Layout) {
+	return new(Layout).Vertical()
 }
-
-// alignment setters
-
-func (f *Flex) Align(alignment align.Alignment) (out *Flex) {
-	f.flex.alignment = alignment
-	return f
-}
-
-// axis setters
 
 // Vertical sets the axis to vertical, otherwise it is horizontal
-func (f *Flex) Vertical() (out *Flex) {
+func (f *Layout) Vertical() (out *Layout) {
 	f.flex.axis = axis.Vertical
 	return f
 }
 
-// spacing setters
+// Align sets the alignment to use on each box in the flex
+func (f *Layout) Align(alignment align.Alignment) (out *Layout) {
+	f.flex.alignment = alignment
+	return f
+}
 
-func (f *Flex) Space(spc Spacing) (out *Flex) {
+// Space sets the spacing for the flex
+func (f *Layout) Space(spc Spacing) (out *Layout) {
 	f.flex.spacing = spc
 	return f
 }
 
-// Rigid inserts a rigid widget into the flex
-func (f *Flex) Rigid(w wdg.Widget) (out *Flex) {
-	f.children = append(f.children, rigid(w))
+// Rigid inserts a string of rigid widget into the flex
+func (f *Layout) Rigid(w ...wdg.Widget) (out *Layout) {
+	for i := range w {
+		f.children = append(f.children, rigid(w[i]))
+	}
 	return f
 }
 
-// Flexed inserts a flexed widget into the flex
-func (f *Flex) Flexed(wgt float32, w wdg.Widget) (out *Flex) {
-	f.children = append(f.children, flexed(wgt, w))
+// Flexed inserts a string of flexed widgets into the flex
+func (f *Layout) Flexed(weight float32, w ...wdg.Widget) (out *Layout) {
+	for i := range w {
+		f.children = append(f.children, flexed(weight/float32(len(w)), w[i]))
+	}
 	return f
 }
 
 // Fn runs the ops in the context using the FlexChildren inside it
-func (f *Flex) Fn(c ctx.Context) dims.Dimensions {
+func (f *Layout) Fn(c ctx.Context) dim.Dimensions {
 	return f.flex.layout(c, f.children...)
 }
