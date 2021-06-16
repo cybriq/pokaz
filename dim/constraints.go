@@ -1,4 +1,4 @@
-package cnst
+package dim
 
 import (
 	"image"

@@ -8,7 +8,7 @@ import (
 	"github.com/cybriq/giocore/io/system"
 	"github.com/cybriq/giocore/op"
 	"github.com/cybriq/giocore/unit"
-	"github.com/cybriq/pokaz/cnst"
+	"github.com/cybriq/pokaz/dim"
 )
 
 // Context carries the state needed by almost all layouts and widgets. A zero
@@ -16,7 +16,7 @@ import (
 // and returns the zero time from Now.
 type Context struct {
 	// Constraints track the constraints for the active widget or layout.
-	Constraints cnst.Constraints
+	Constraints dim.Constraints
 
 	Metric unit.Metric
 	// By convention, a nil Queue is a signal to widgets to draw themselves in a
@@ -63,7 +63,7 @@ func New(ops *op.Ops, e system.FrameEvent) Context {
 		Now:         e.Now,
 		Queue:       e.Queue,
 		Metric:      e.Metric,
-		Constraints: cnst.Exact(size),
+		Constraints: dim.Exact(size),
 	}
 }
 

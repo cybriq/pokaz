@@ -7,7 +7,7 @@ import (
 	"github.com/cybriq/giocore/unit"
 	"github.com/cybriq/pokaz/coord"
 	"github.com/cybriq/pokaz/ctx"
-	"github.com/cybriq/pokaz/dims"
+	"github.com/cybriq/pokaz/dim"
 	"github.com/cybriq/pokaz/wdg"
 )
 
@@ -19,7 +19,7 @@ type inset struct {
 }
 
 // layout an inset.
-func (in inset) layout(gtx ctx.Context, w wdg.Widget) dims.Dimensions {
+func (in inset) layout(gtx ctx.Context, w wdg.Widget) dim.Dimensions {
 	top := gtx.Px(in.Top)
 	right := gtx.Px(in.Right)
 	bottom := gtx.Px(in.Bottom)
@@ -48,7 +48,7 @@ func (in inset) layout(gtx ctx.Context, w wdg.Widget) dims.Dimensions {
 	gtx.Constraints = mcs
 	dm := w(gtx)
 	stack.Load()
-	return dims.Dimensions{
+	return dim.Dimensions{
 		Size:     dm.Size.Add(image.Point{X: right + left, Y: top + bottom}),
 		Baseline: dm.Baseline + bottom,
 	}

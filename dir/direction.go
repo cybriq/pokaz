@@ -6,7 +6,7 @@ import (
 	"github.com/cybriq/giocore/op"
 	"github.com/cybriq/pokaz/coord"
 	"github.com/cybriq/pokaz/ctx"
-	"github.com/cybriq/pokaz/dims"
+	"github.com/cybriq/pokaz/dim"
 	"github.com/cybriq/pokaz/wdg"
 )
 
@@ -41,7 +41,7 @@ func (d Direction) String() string {
 // context constraints minimum cleared.
 func (d Direction) Fn(
 	gtx ctx.Context, w wdg.Widget,
-) dims.Dimensions {
+) dim.Dimensions {
 	macro := op.Record(gtx.Ops)
 	cs := gtx.Constraints
 	gtx.Constraints.Min = image.Point{}
@@ -60,7 +60,7 @@ func (d Direction) Fn(
 	op.Offset(coord.FPt(p)).Add(gtx.Ops)
 	call.Add(gtx.Ops)
 
-	return dims.Dimensions{
+	return dim.Dimensions{
 		Size:     sz,
 		Baseline: dim.Baseline + sz.Y - dim.Size.Y - p.Y,
 	}

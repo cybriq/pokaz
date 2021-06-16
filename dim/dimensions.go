@@ -1,4 +1,4 @@
-package dims
+package dim
 
 import "image"
 

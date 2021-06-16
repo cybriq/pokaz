@@ -10,7 +10,7 @@ import (
 	"github.com/cybriq/pokaz/axis"
 	"github.com/cybriq/pokaz/coord"
 	"github.com/cybriq/pokaz/ctx"
-	"github.com/cybriq/pokaz/dims"
+	"github.com/cybriq/pokaz/dim"
 	"github.com/cybriq/pokaz/wdg"
 )
 
@@ -37,7 +37,7 @@ type child struct {
 
 	// Scratch space.
 	call op.CallOp
-	dims dims.Dimensions
+	dims dim.Dimensions
 }
 
 // Spacing determine the spacing mode for a flex.
@@ -81,7 +81,7 @@ func flexed(weight float32, widget wdg.Widget) child {
 
 // layout a list of children. The position of the children are determined by the
 // specified order, but rigid children are laid out before flexed children.
-func (f flex) layout(gtx ctx.Context, children ...child) dims.Dimensions {
+func (f flex) layout(gtx ctx.Context, children ...child) dim.Dimensions {
 	size := 0
 	cs := gtx.Constraints
 	mainMin, mainMax := f.axis.MainConstraint(cs)
@@ -220,7 +220,7 @@ func (f flex) layout(gtx ctx.Context, children ...child) dims.Dimensions {
 		}
 	}
 	sz := f.axis.Convert(image.Pt(mainSize, maxCross))
-	return dims.Dimensions{Size: sz, Baseline: sz.Y - maxBaseline}
+	return dim.Dimensions{Size: sz, Baseline: sz.Y - maxBaseline}
 }
 
 func (s Spacing) String() string {

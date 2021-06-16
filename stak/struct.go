@@ -8,7 +8,7 @@ import (
 	"github.com/cybriq/giocore/op"
 	"github.com/cybriq/pokaz/coord"
 	"github.com/cybriq/pokaz/ctx"
-	"github.com/cybriq/pokaz/dims"
+	"github.com/cybriq/pokaz/dim"
 	"github.com/cybriq/pokaz/dir"
 	"github.com/cybriq/pokaz/wdg"
 )
@@ -27,7 +27,7 @@ type child struct {
 
 	// Scratch space.
 	call op.CallOp
-	dims dims.Dimensions
+	dims dim.Dimensions
 }
 
 // stacked returns a stack child that is laid out with no minimum constraints
@@ -54,7 +54,7 @@ func expanded(w wdg.Widget) child {
 func (s stack) layout(
 	gtx ctx.Context,
 	children ...child,
-) dims.Dimensions {
+) dim.Dimensions {
 	var maxSZ image.Point
 	// First lay out stacked children.
 	cgtx := gtx
@@ -121,7 +121,7 @@ func (s stack) layout(
 			}
 		}
 	}
-	return dims.Dimensions{
+	return dim.Dimensions{
 		Size:     maxSZ,
 		Baseline: baseline,
 	}

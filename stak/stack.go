@@ -2,7 +2,7 @@ package stak
 
 import (
 	"github.com/cybriq/pokaz/ctx"
-	"github.com/cybriq/pokaz/dims"
+	"github.com/cybriq/pokaz/dim"
 	"github.com/cybriq/pokaz/dir"
 	"github.com/cybriq/pokaz/wdg"
 )
@@ -39,6 +39,6 @@ func (s *Stack) Expanded(w wdg.Widget) (out *Stack) {
 }
 
 // Fn runs the ops queue configured in the stack
-func (s *Stack) Fn(c ctx.Context) dims.Dimensions {
+func (s *Stack) Fn(c ctx.Context) dim.Dimensions {
 	return s.stack.layout(c, s.children...)
 }

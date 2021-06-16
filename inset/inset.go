@@ -3,7 +3,7 @@ package inset
 import (
 	"github.com/cybriq/giocore/unit"
 	"github.com/cybriq/pokaz/ctx"
-	"github.com/cybriq/pokaz/dims"
+	"github.com/cybriq/pokaz/dim"
 	"github.com/cybriq/pokaz/wdg"
 )
 
@@ -28,7 +28,7 @@ func (in *Inset) Embed(w wdg.Widget) *Inset {
 }
 
 // Fn lays out the given widget with the configured context and padding
-func (in *Inset) Fn(c ctx.Context) dims.Dimensions {
+func (in *Inset) Fn(c ctx.Context) dim.Dimensions {
 	return in.in.layout(c, in.w)
 }
 

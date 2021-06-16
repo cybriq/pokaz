@@ -5,7 +5,7 @@ import (
 
 	"github.com/cybriq/giocore/unit"
 	"github.com/cybriq/pokaz/ctx"
-	"github.com/cybriq/pokaz/dims"
+	"github.com/cybriq/pokaz/dim"
 )
 
 // spacer adds space between widgets.
@@ -13,8 +13,8 @@ type spacer struct {
 	Width, Height unit.Value
 }
 
-func (s spacer) Fn(gtx ctx.Context) dims.Dimensions {
-	return dims.Dimensions{
+func (s spacer) Fn(gtx ctx.Context) dim.Dimensions {
+	return dim.Dimensions{
 		Size: image.Point{
 			X: gtx.Px(s.Width),
 			Y: gtx.Px(s.Height),
