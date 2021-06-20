@@ -6,12 +6,12 @@ import (
 	"image"
 
 	"github.com/cybriq/giocore/op"
-	"github.com/cybriq/pokaz/align"
-	"github.com/cybriq/pokaz/axis"
-	"github.com/cybriq/pokaz/conv"
-	"github.com/cybriq/pokaz/ctx"
-	"github.com/cybriq/pokaz/dim"
-	"github.com/cybriq/pokaz/wdg"
+	"github.com/cybriq/pokaz/layout/align"
+	"github.com/cybriq/pokaz/layout/axis"
+	"github.com/cybriq/pokaz/layout/conv"
+	"github.com/cybriq/pokaz/layout/ctx"
+	"github.com/cybriq/pokaz/layout/dim"
+	"github.com/cybriq/pokaz/layout/wdg"
 )
 
 // flex lays out child elements along an axis, according to alignment and

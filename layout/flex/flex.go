@@ -1,11 +1,11 @@
 package flex
 
 import (
-	"github.com/cybriq/pokaz/align"
-	"github.com/cybriq/pokaz/axis"
-	"github.com/cybriq/pokaz/ctx"
-	"github.com/cybriq/pokaz/dim"
-	"github.com/cybriq/pokaz/wdg"
+	"github.com/cybriq/pokaz/layout/align"
+	"github.com/cybriq/pokaz/layout/axis"
+	"github.com/cybriq/pokaz/layout/ctx"
+	"github.com/cybriq/pokaz/layout/dim"
+	"github.com/cybriq/pokaz/layout/wdg"
 )
 
 // Layout is a horizontal or vertical stack of widgets with fixed and expanding

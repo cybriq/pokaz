@@ -2,9 +2,9 @@ package inset
 
 import (
 	"github.com/cybriq/giocore/unit"
-	"github.com/cybriq/pokaz/ctx"
-	"github.com/cybriq/pokaz/dim"
-	"github.com/cybriq/pokaz/wdg"
+	"github.com/cybriq/pokaz/layout/ctx"
+	"github.com/cybriq/pokaz/layout/dim"
+	"github.com/cybriq/pokaz/layout/wdg"
 )
 
 type _inset struct {

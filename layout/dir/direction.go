@@ -4,10 +4,10 @@ import (
 	"image"
 
 	"github.com/cybriq/giocore/op"
-	"github.com/cybriq/pokaz/conv"
-	"github.com/cybriq/pokaz/ctx"
-	"github.com/cybriq/pokaz/dim"
-	"github.com/cybriq/pokaz/wdg"
+	"github.com/cybriq/pokaz/layout/conv"
+	"github.com/cybriq/pokaz/layout/ctx"
+	"github.com/cybriq/pokaz/layout/dim"
+	"github.com/cybriq/pokaz/layout/wdg"
 )
 
 type Direction uint8

@@ -4,8 +4,8 @@ import (
 	"image"
 
 	"github.com/cybriq/giocore/unit"
-	"github.com/cybriq/pokaz/ctx"
-	"github.com/cybriq/pokaz/dim"
+	"github.com/cybriq/pokaz/layout/ctx"
+	"github.com/cybriq/pokaz/layout/dim"
 )
 
 // spacer adds space between widgets.

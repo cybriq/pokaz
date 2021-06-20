@@ -8,7 +8,7 @@ import (
 	"github.com/cybriq/giocore/io/system"
 	"github.com/cybriq/giocore/op"
 	"github.com/cybriq/giocore/unit"
-	"github.com/cybriq/pokaz/dim"
+	"github.com/cybriq/pokaz/layout/dim"
 )
 
 // Context carries the state needed by almost all layouts and widgets. A zero

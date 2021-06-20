@@ -3,7 +3,7 @@ package axis
 import (
 	"image"
 
-	"github.com/cybriq/pokaz/dim"
+	"github.com/cybriq/pokaz/layout/dim"
 )
 
 // Axis defines the dir of a widget with multiple elements

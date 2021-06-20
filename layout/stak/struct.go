@@ -6,11 +6,11 @@ import (
 	"image"
 
 	"github.com/cybriq/giocore/op"
-	"github.com/cybriq/pokaz/conv"
-	"github.com/cybriq/pokaz/ctx"
-	"github.com/cybriq/pokaz/dim"
-	"github.com/cybriq/pokaz/dir"
-	"github.com/cybriq/pokaz/wdg"
+	"github.com/cybriq/pokaz/layout/conv"
+	"github.com/cybriq/pokaz/layout/ctx"
+	"github.com/cybriq/pokaz/layout/dim"
+	"github.com/cybriq/pokaz/layout/dir"
+	"github.com/cybriq/pokaz/layout/wdg"
 )
 
 // stack lays out child elements on top of each other, according to an alignment
@@ -56,14 +56,14 @@ func (s stack) layout(
 ) dim.Dimensions {
 	var maxSZ image.Point
 	// First lay out stacked children.
-	cgtx := gtx
-	cgtx.Constraints.Min = image.Point{}
+	ct := gtx
+	ct.Constraints.Min = image.Point{}
 	for i, w := range children {
 		if w.expanded {
 			continue
 		}
 		macro := op.Record(gtx.Ops)
-		d := w.widget(cgtx)
+		d := w.widget(ct)
 		call := macro.Stop()
 		if w := d.Size.X; w > maxSZ.X {
 			maxSZ.X = w
@@ -80,8 +80,8 @@ func (s stack) layout(
 			continue
 		}
 		macro := op.Record(gtx.Ops)
-		cgtx.Constraints.Min = maxSZ
-		d := w.widget(cgtx)
+		ct.Constraints.Min = maxSZ
+		d := w.widget(ct)
 		call := macro.Stop()
 		if w := d.Size.X; w > maxSZ.X {
 			maxSZ.X = w

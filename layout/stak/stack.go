@@ -1,10 +1,10 @@
 package stak
 
 import (
-	"github.com/cybriq/pokaz/ctx"
-	"github.com/cybriq/pokaz/dim"
-	"github.com/cybriq/pokaz/dir"
-	"github.com/cybriq/pokaz/wdg"
+	"github.com/cybriq/pokaz/layout/ctx"
+	"github.com/cybriq/pokaz/layout/dim"
+	"github.com/cybriq/pokaz/layout/dir"
+	"github.com/cybriq/pokaz/layout/wdg"
 )
 
 type _stack struct {
