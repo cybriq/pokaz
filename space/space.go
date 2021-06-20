@@ -13,6 +13,12 @@ type spacer struct {
 	Width, Height unit.Value
 }
 
+//Spacer makes a new spacer
+func Spacer(width, height float32) spacer {
+	return spacer{unit.Sp(width), unit.Sp(height)}
+}
+
+//Fn lays out a spacer
 func (s spacer) Fn(gtx ctx.Context) dim.Dimensions {
 	return dim.Dimensions{
 		Size: image.Point{
@@ -20,8 +26,4 @@ func (s spacer) Fn(gtx ctx.Context) dim.Dimensions {
 			Y: gtx.Px(s.Height),
 		},
 	}
-}
-
-func New(width, height float32) spacer {
-	return spacer{unit.Sp(width), unit.Sp(height)}
 }

@@ -5,7 +5,7 @@ import (
 
 	"github.com/cybriq/giocore/op"
 	"github.com/cybriq/giocore/unit"
-	"github.com/cybriq/pokaz/coord"
+	"github.com/cybriq/pokaz/conv"
 	"github.com/cybriq/pokaz/ctx"
 	"github.com/cybriq/pokaz/dim"
 	"github.com/cybriq/pokaz/wdg"
@@ -44,7 +44,7 @@ func (in inset) layout(gtx ctx.Context, w wdg.Widget) dim.Dimensions {
 		mcs.Min.Y = mcs.Max.Y
 	}
 	stack := op.Save(gtx.Ops)
-	op.Offset(coord.FPt(image.Point{X: left, Y: top})).Add(gtx.Ops)
+	op.Offset(conv.Point(image.Point{X: left, Y: top})).Add(gtx.Ops)
 	gtx.Constraints = mcs
 	dm := w(gtx)
 	stack.Load()

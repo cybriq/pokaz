@@ -4,7 +4,7 @@ import (
 	"image"
 
 	"github.com/cybriq/giocore/op"
-	"github.com/cybriq/pokaz/coord"
+	"github.com/cybriq/pokaz/conv"
 	"github.com/cybriq/pokaz/ctx"
 	"github.com/cybriq/pokaz/dim"
 	"github.com/cybriq/pokaz/wdg"
@@ -25,7 +25,7 @@ const (
 	endDirections
 )
 
-var Directions = []string{
+var directions = []string{
 	"NW", "N", "NE", "E", "SE", "S", "SW", "W", "Center",
 }
 
@@ -34,7 +34,7 @@ func (d Direction) String() string {
 	if d < 0 || d >= endDirections {
 		panic("dir is out of bounds")
 	}
-	return Directions[d]
+	return directions[d]
 }
 
 // Fn lays out a widget according to the dir. The widget is called with the
@@ -45,9 +45,9 @@ func (d Direction) Fn(
 	macro := op.Record(gtx.Ops)
 	cs := gtx.Constraints
 	gtx.Constraints.Min = image.Point{}
-	dim := w(gtx)
+	dims := w(gtx)
 	call := macro.Stop()
-	sz := dim.Size
+	sz := dims.Size
 	if sz.X < cs.Min.X {
 		sz.X = cs.Min.X
 	}
@@ -56,13 +56,13 @@ func (d Direction) Fn(
 	}
 
 	defer op.Save(gtx.Ops).Load()
-	p := d.Position(dim.Size, sz)
-	op.Offset(coord.FPt(p)).Add(gtx.Ops)
+	p := d.Position(dims.Size, sz)
+	op.Offset(conv.Point(p)).Add(gtx.Ops)
 	call.Add(gtx.Ops)
 
 	return dim.Dimensions{
 		Size:     sz,
-		Baseline: dim.Baseline + sz.Y - dim.Size.Y - p.Y,
+		Baseline: dims.Baseline + sz.Y - dims.Size.Y - p.Y,
 	}
 }
 

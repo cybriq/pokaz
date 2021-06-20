@@ -6,7 +6,7 @@ import (
 	"image"
 
 	"github.com/cybriq/giocore/op"
-	"github.com/cybriq/pokaz/coord"
+	"github.com/cybriq/pokaz/conv"
 	"github.com/cybriq/pokaz/ctx"
 	"github.com/cybriq/pokaz/dim"
 	"github.com/cybriq/pokaz/dir"
@@ -30,17 +30,17 @@ type child struct {
 	dims dim.Dimensions
 }
 
-// stacked returns a stack child that is laid out with no minimum constraints
-// and maximum constraints passed to stack.layout.
+// stacked returns a stack child that is laid out with no minimum constraints and
+// maximum constraints passed to stack.layout.
 func stacked(w wdg.Widget) child {
 	return child{
 		widget: w,
 	}
 }
 
-// expanded returns a stack child with the minimum constraints set to the
-// largest stacked child. The maximum constraints are set to the same as passed
-// to stack.layout.
+// expanded returns a stack child with the minimum constraints set to the largest
+// stacked child. The maximum constraints are set to the same as passed to
+// stack.layout.
 func expanded(w wdg.Widget) child {
 	return child{
 		expanded: true,
@@ -48,9 +48,8 @@ func expanded(w wdg.Widget) child {
 	}
 }
 
-// layout a stack of children. The position of the children are
-// determined by the specified order, but stacked children are laid out
-// before expanded children.
+// layout a stack of children. The position of the children are determined by the
+// specified order, but stacked children are laid out before expanded children.
 func (s stack) layout(
 	gtx ctx.Context,
 	children ...child,
@@ -112,7 +111,7 @@ func (s stack) layout(
 			p.Y = maxSZ.Y - sz.Y
 		}
 		stack := op.Save(gtx.Ops)
-		op.Offset(coord.FPt(p)).Add(gtx.Ops)
+		op.Offset(conv.Point(p)).Add(gtx.Ops)
 		ch.call.Add(gtx.Ops)
 		stack.Load()
 		if baseline == 0 {

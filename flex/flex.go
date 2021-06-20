@@ -22,7 +22,7 @@ func Flex() (out *Layout) {
 
 // VFlex creates a new vertical flex layout
 func VFlex() (out *Layout) {
-	return new(Layout).Vertical()
+	return Flex().Vertical()
 }
 
 // Vertical sets the axis to vertical, otherwise it is horizontal

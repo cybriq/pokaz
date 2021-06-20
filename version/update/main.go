@@ -127,8 +127,8 @@ var (
 	GitCommit = "%s"
 	// BuildTime stores the time when the current binary was built
 	BuildTime = "%s"
-	// Tag lists the Tag on the build, adding a + to the newest Tag if the commit is
-	// not that commit
+	// Tag lists the Tag on the build, adding a + to the newest Tag if the 
+	// commit is not that commit
 	Tag = "%s"
 	// PathBase is the path base returned from runtime caller
 	PathBase = "%s"

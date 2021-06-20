@@ -7,38 +7,36 @@ import (
 	"github.com/cybriq/pokaz/wdg"
 )
 
-type Stack struct {
+type _stack struct {
 	*stack
 	children []child
 }
 
-// New starts a chain of widgets to compose into a stack
-func New() (out *Stack) {
-	out = &Stack{stack: &stack{}}
+// Stack starts a chain of widgets to compose into a stack
+func Stack() (out *_stack) {
+	out = &_stack{stack: &stack{}}
 	return
 }
 
-func (s *stack) Alignment(alignment dir.Direction) *stack {
+func (s *_stack) Alignment(alignment dir.Direction) *_stack {
 	s.alignment = alignment
 	return s
 }
 
-// functions to chain widgets to stack (first is lowest last highest)
-
 // Stacked appends a widget to the stack, the stack's dimensions will be
 // computed from the largest widget in the stack
-func (s *Stack) Stacked(w wdg.Widget) (out *Stack) {
+func (s *_stack) Stacked(w wdg.Widget) (out *_stack) {
 	s.children = append(s.children, stacked(w))
 	return s
 }
 
 // Expanded lays out a widget with the same max constraints as the stack
-func (s *Stack) Expanded(w wdg.Widget) (out *Stack) {
+func (s *_stack) Expanded(w wdg.Widget) (out *_stack) {
 	s.children = append(s.children, expanded(w))
 	return s
 }
 
 // Fn runs the ops queue configured in the stack
-func (s *Stack) Fn(c ctx.Context) dim.Dimensions {
+func (s *_stack) Fn(c ctx.Context) dim.Dimensions {
 	return s.stack.layout(c, s.children...)
 }

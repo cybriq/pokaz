@@ -8,7 +8,7 @@ import (
 	"github.com/cybriq/giocore/op"
 	"github.com/cybriq/pokaz/align"
 	"github.com/cybriq/pokaz/axis"
-	"github.com/cybriq/pokaz/coord"
+	"github.com/cybriq/pokaz/conv"
 	"github.com/cybriq/pokaz/ctx"
 	"github.com/cybriq/pokaz/dim"
 	"github.com/cybriq/pokaz/wdg"
@@ -188,7 +188,7 @@ func (f flex) layout(gtx ctx.Context, children ...child) dim.Dimensions {
 		}
 		stack := op.Save(gtx.Ops)
 		pt := f.axis.Convert(image.Pt(mainSize, cross))
-		op.Offset(coord.FPt(pt)).Add(gtx.Ops)
+		op.Offset(conv.Point(pt)).Add(gtx.Ops)
 		child.call.Add(gtx.Ops)
 		stack.Load()
 		mainSize += f.axis.Convert(dm.Size).X
