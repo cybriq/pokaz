@@ -5,6 +5,8 @@ github.com/anmitsu/go-shlex v0.0.0-20161002113705-648efa622239 h1:kFOfPq6dUM1hTo
 github.com/anmitsu/go-shlex v0.0.0-20161002113705-648efa622239/go.mod h1:2FmKhYUyUczH0OGQWaF5ceTx0UBShxjsH6f8oGKYe2c=
 github.com/armon/go-socks5 v0.0.0-20160902184237-e75332964ef5 h1:0CwZNZbxp69SHPdPJAN/hZIm0C4OItdklCFmMRWYpio=
 github.com/armon/go-socks5 v0.0.0-20160902184237-e75332964ef5/go.mod h1:wHh0iHkYZB8zMSxRWpUBQtwG5a7fFgvEO+odwuTv2gs=
+github.com/cckuailong/colorsys-go v0.0.0-20200114124858-f94465f7d6be h1:wKra65snQdVSqFsDYtD6tTdm6U1s3IQmS+jSHIbz+rY=
+github.com/cckuailong/colorsys-go v0.0.0-20200114124858-f94465f7d6be/go.mod h1:j7Idxk0gNC0BPUfzTvEQi9yRjtRlQ1aHQTlWTxXOYxM=
 github.com/chromedp/cdproto v0.0.0-20210508221054-d7cfa85db7d1/go.mod h1:At5TxYYdxkbQL0TSefRjhLE3Q0lgvqKKMSFUglJ7i1U=
 github.com/chromedp/chromedp v0.7.2/go.mod h1:9BUOYV/gTXtIpGCoM+kVSmh1j6M9oG48qGW1z3h72Z0=
 github.com/chromedp/sysutil v1.0.0/go.mod h1:kgWmDdq8fTzXYcKIBqIYvRRTnYb9aNS9moAV0xufSww=
