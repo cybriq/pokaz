@@ -42,9 +42,11 @@ func (d Direction) String() string {
 func (d Direction) Fn(
 	gtx ctx.Context, w wdg.Widget,
 ) dim.Dimensions {
-	macro := op.Record(gtx.Ops)
-	cs := gtx.Constraints
-	gtx.Constraints.Min = image.Point{}
+	macro := op.Record(gtx.Ops())
+	cs := gtx.Constraints()
+	cstr := gtx.Constraints()
+	cstr.Min = image.Point{}
+	gtx.SetConstraints(cstr)
 	dims := w(gtx)
 	call := macro.Stop()
 	sz := dims.Size
@@ -55,10 +57,10 @@ func (d Direction) Fn(
 		sz.Y = cs.Min.Y
 	}
 
-	defer op.Save(gtx.Ops).Load()
+	defer op.Save(gtx.Ops()).Load()
 	p := d.Position(dims.Size, sz)
-	op.Offset(conv.Point(p)).Add(gtx.Ops)
-	call.Add(gtx.Ops)
+	op.Offset(conv.Point(p)).Add(gtx.Ops())
+	call.Add(gtx.Ops())
 
 	return dim.Dimensions{
 		Size:     sz,

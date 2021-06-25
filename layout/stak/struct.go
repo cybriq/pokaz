@@ -4,10 +4,10 @@ package stak
 
 import (
 	"image"
-
+	
 	"github.com/cybriq/giocore/op"
 	"github.com/cybriq/pokaz/layout/conv"
-	"github.com/cybriq/pokaz/layout/ctx"
+	"github.com/cybriq/pokaz/layout/ctx/proto"
 	"github.com/cybriq/pokaz/layout/dim"
 	"github.com/cybriq/pokaz/layout/dir"
 	"github.com/cybriq/pokaz/layout/wdg"
@@ -51,18 +51,19 @@ func expanded(w wdg.Widget) child {
 // layout a stack of children. The position of the children are determined by the
 // specified order, but stacked children are laid out before expanded children.
 func (s stack) layout(
-	gtx ctx.Context,
+	gtx proto.Context,
 	children ...child,
 ) dim.Dimensions {
 	var maxSZ image.Point
 	// First lay out stacked children.
 	ct := gtx
-	ct.Constraints.Min = image.Point{}
+	cs := ct.Constraints()
+	cs.Min = image.Point{}
 	for i, w := range children {
 		if w.expanded {
 			continue
 		}
-		macro := op.Record(gtx.Ops)
+		macro := op.Record(gtx.Ops())
 		d := w.widget(ct)
 		call := macro.Stop()
 		if w := d.Size.X; w > maxSZ.X {
@@ -79,8 +80,8 @@ func (s stack) layout(
 		if !w.expanded {
 			continue
 		}
-		macro := op.Record(gtx.Ops)
-		ct.Constraints.Min = maxSZ
+		macro := op.Record(gtx.Ops())
+		cs.Min = maxSZ
 		d := w.widget(ct)
 		call := macro.Stop()
 		if w := d.Size.X; w > maxSZ.X {
@@ -93,7 +94,7 @@ func (s stack) layout(
 		children[i].dims = d
 	}
 
-	maxSZ = gtx.Constraints.Constrain(maxSZ)
+	maxSZ = cs.Constrain(maxSZ)
 	var baseline int
 	for _, ch := range children {
 		sz := ch.dims.Size
@@ -110,9 +111,9 @@ func (s stack) layout(
 		case dir.SW, dir.S, dir.SE:
 			p.Y = maxSZ.Y - sz.Y
 		}
-		stack := op.Save(gtx.Ops)
-		op.Offset(conv.Point(p)).Add(gtx.Ops)
-		ch.call.Add(gtx.Ops)
+		stack := op.Save(gtx.Ops())
+		op.Offset(conv.Point(p)).Add(gtx.Ops())
+		ch.call.Add(gtx.Ops())
 		stack.Load()
 		if baseline == 0 {
 			if b := ch.dims.Baseline; b != 0 {

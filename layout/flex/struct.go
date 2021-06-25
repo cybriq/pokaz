@@ -83,7 +83,7 @@ func flexed(weight float32, widget wdg.Widget) child {
 // specified order, but rigid children are laid out before flexed children.
 func (f flex) layout(gtx ctx.Context, children ...child) dim.Dimensions {
 	size := 0
-	cs := gtx.Constraints
+	cs := gtx.Constraints()
 	mainMin, mainMax := f.axis.MainConstraint(cs)
 	crossMin, crossMax := f.axis.CrossConstraint(cs)
 	remaining := mainMax
@@ -95,9 +95,9 @@ func (f flex) layout(gtx ctx.Context, children ...child) dim.Dimensions {
 			totalWeight += child.weight
 			continue
 		}
-		macro := op.Record(gtx.Ops)
-		cgtx.Constraints = f.axis.
-			Constraints(0, remaining, crossMin, crossMax)
+		macro := op.Record(gtx.Ops())
+		cgtx.SetConstraints(f.axis.
+			Constraints(0, remaining, crossMin, crossMax))
 		dm := child.widget(cgtx)
 		c := macro.Stop()
 		sz := f.axis.Convert(dm.Size).X
@@ -131,9 +131,10 @@ func (f flex) layout(gtx ctx.Context, children ...child) dim.Dimensions {
 				flexSize = remaining
 			}
 		}
-		macro := op.Record(gtx.Ops)
-		cgtx.Constraints = f.axis.Constraints(flexSize, flexSize, crossMin,
-			crossMax)
+		macro := op.Record(gtx.Ops())
+		cgtx.SetConstraints(
+			f.axis.Constraints(
+				flexSize, flexSize, crossMin, crossMax))
 		dm := child.widget(cgtx)
 		c := macro.Stop()
 		sz := f.axis.Convert(dm.Size).X
@@ -186,10 +187,10 @@ func (f flex) layout(gtx ctx.Context, children ...child) dim.Dimensions {
 				cross = maxBaseline - b
 			}
 		}
-		stack := op.Save(gtx.Ops)
+		stack := op.Save(gtx.Ops())
 		pt := f.axis.Convert(image.Pt(mainSize, cross))
-		op.Offset(conv.Point(pt)).Add(gtx.Ops)
-		child.call.Add(gtx.Ops)
+		op.Offset(conv.Point(pt)).Add(gtx.Ops())
+		child.call.Add(gtx.Ops())
 		stack.Load()
 		mainSize += f.axis.Convert(dm.Size).X
 		if i < len(children)-1 {

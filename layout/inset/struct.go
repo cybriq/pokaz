@@ -24,7 +24,7 @@ func (in inset) layout(gtx ctx.Context, w wdg.Widget) dim.Dimensions {
 	right := gtx.Px(in.Right)
 	bottom := gtx.Px(in.Bottom)
 	left := gtx.Px(in.Left)
-	mcs := gtx.Constraints
+	mcs := gtx.Constraints()
 	mcs.Max.X -= left + right
 	if mcs.Max.X < 0 {
 		left = 0
@@ -43,9 +43,9 @@ func (in inset) layout(gtx ctx.Context, w wdg.Widget) dim.Dimensions {
 	if mcs.Min.Y > mcs.Max.Y {
 		mcs.Min.Y = mcs.Max.Y
 	}
-	stack := op.Save(gtx.Ops)
-	op.Offset(conv.Point(image.Point{X: left, Y: top})).Add(gtx.Ops)
-	gtx.Constraints = mcs
+	stack := op.Save(gtx.Ops())
+	op.Offset(conv.Point(image.Point{X: left, Y: top})).Add(gtx.Ops())
+	gtx.SetConstraints(mcs)
 	dm := w(gtx)
 	stack.Load()
 	return dim.Dimensions{
