@@ -1,15 +1,36 @@
-package inset
+package layout
 
 import (
 	"image"
-
+	
 	"github.com/cybriq/giocore/op"
 	"github.com/cybriq/giocore/unit"
-	"github.com/cybriq/pokaz/layout/conv"
-	"github.com/cybriq/pokaz/layout/ctx"
-	"github.com/cybriq/pokaz/layout/dim"
-	"github.com/cybriq/pokaz/layout/wdg"
 )
+
+type _inset struct {
+	in inset
+	w  Widget
+}
+
+// New creates a padded empty space around a widget
+func New(pad float32, embed Widget) (out *_inset) {
+	out = &_inset{
+		in: uniform(unit.Sp(pad)),
+		w:  embed,
+	}
+	return
+}
+
+// Embed sets the widget that will be inside the inset
+func (in *_inset) Embed(w Widget) *_inset {
+	in.w = w
+	return in
+}
+
+// Fn lays out the given widget with the configured context and padding
+func (in *_inset) Fn(c Context) Dimensions {
+	return in.in.layout(c, in.w)
+}
 
 // inset adds space around a widget by decreasing its maximum constraints. The
 // minimum constraints will be adjusted to ensure they do not exceed the
@@ -19,7 +40,7 @@ type inset struct {
 }
 
 // layout an inset.
-func (in inset) layout(gtx ctx.Context, w wdg.Widget) dim.Dimensions {
+func (in inset) layout(gtx Context, w Widget) Dimensions {
 	top := gtx.Px(in.Top)
 	right := gtx.Px(in.Right)
 	bottom := gtx.Px(in.Bottom)
@@ -44,11 +65,11 @@ func (in inset) layout(gtx ctx.Context, w wdg.Widget) dim.Dimensions {
 		mcs.Min.Y = mcs.Max.Y
 	}
 	stack := op.Save(gtx.Ops)
-	op.Offset(conv.Point(image.Point{X: left, Y: top})).Add(gtx.Ops)
+	op.Offset(Point(image.Point{X: left, Y: top})).Add(gtx.Ops)
 	gtx.Constraints = mcs
 	dm := w(gtx)
 	stack.Load()
-	return dim.Dimensions{
+	return Dimensions{
 		Size:     dm.Size.Add(image.Point{X: right + left, Y: top + bottom}),
 		Baseline: dm.Baseline + bottom,
 	}

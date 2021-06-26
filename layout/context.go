@@ -1,4 +1,4 @@
-package ctx
+package layout
 
 import (
 	"time"
@@ -8,7 +8,6 @@ import (
 	"github.com/cybriq/giocore/io/system"
 	"github.com/cybriq/giocore/op"
 	"github.com/cybriq/giocore/unit"
-	"github.com/cybriq/pokaz/layout/dim"
 )
 
 // Context carries the state needed by almost all layouts and widgets. A zero
@@ -16,7 +15,7 @@ import (
 // and returns the zero time from Now.
 type Context struct {
 	// Constraints track the constraints for the active widget or layout.
-	Constraints dim.Constraints
+	Constraints Constraints
 
 	Metric unit.Metric
 	// By convention, a nil Queue is a signal to widgets to draw themselves in a
@@ -28,7 +27,7 @@ type Context struct {
 	*op.Ops
 }
 
-// New is a shorthand for
+// NewContext is a shorthand for
 //
 //   Context{
 //     Ops: ops,
@@ -39,7 +38,7 @@ type Context struct {
 //   }
 //
 // New calls ops.Reset and adjusts ops for e.Insets.
-func New(ops *op.Ops, e system.FrameEvent) Context {
+func NewContext(ops *op.Ops, e system.FrameEvent) Context {
 	ops.Reset()
 
 	size := e.Size
@@ -63,7 +62,7 @@ func New(ops *op.Ops, e system.FrameEvent) Context {
 		Now:         e.Now,
 		Queue:       e.Queue,
 		Metric:      e.Metric,
-		Constraints: dim.Exact(size),
+		Constraints: Exact(size),
 	}
 }
 

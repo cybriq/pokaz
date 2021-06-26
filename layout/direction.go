@@ -1,13 +1,9 @@
-package dir
+package layout
 
 import (
 	"image"
-
+	
 	"github.com/cybriq/giocore/op"
-	"github.com/cybriq/pokaz/layout/conv"
-	"github.com/cybriq/pokaz/layout/ctx"
-	"github.com/cybriq/pokaz/layout/dim"
-	"github.com/cybriq/pokaz/layout/wdg"
 )
 
 type Direction uint8
@@ -40,8 +36,8 @@ func (d Direction) String() string {
 // Fn lays out a widget according to the dir. The widget is called with the
 // context constraints minimum cleared.
 func (d Direction) Fn(
-	gtx ctx.Context, w wdg.Widget,
-) dim.Dimensions {
+	gtx Context, w Widget,
+) Dimensions {
 	macro := op.Record(gtx.Ops)
 	cs := gtx.Constraints
 	gtx.Constraints.Min = image.Point{}
@@ -57,10 +53,10 @@ func (d Direction) Fn(
 
 	defer op.Save(gtx.Ops).Load()
 	p := d.Position(dims.Size, sz)
-	op.Offset(conv.Point(p)).Add(gtx.Ops)
+	op.Offset(Point(p)).Add(gtx.Ops)
 	call.Add(gtx.Ops)
 
-	return dim.Dimensions{
+	return Dimensions{
 		Size:     sz,
 		Baseline: dims.Baseline + sz.Y - dims.Size.Y - p.Y,
 	}

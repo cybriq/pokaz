@@ -1,9 +1,7 @@
-package axis
+package layout
 
 import (
 	"image"
-
-	"github.com/cybriq/pokaz/layout/dim"
 )
 
 // Axis defines the dir of a widget with multiple elements
@@ -25,7 +23,7 @@ func (a Axis) Convert(pt image.Point) image.Point {
 }
 
 // MainConstraint returns the min and max main Constraints for axis a
-func (a Axis) MainConstraint(cs dim.Constraints) (int, int) {
+func (a Axis) MainConstraint(cs Constraints) (int, int) {
 	if a == Horizontal {
 		return cs.Min.X, cs.Max.X
 	}
@@ -33,7 +31,7 @@ func (a Axis) MainConstraint(cs dim.Constraints) (int, int) {
 }
 
 // CrossConstraint returns the min and max cross Constraints for axis a
-func (a Axis) CrossConstraint(cs dim.Constraints) (int, int) {
+func (a Axis) CrossConstraint(cs Constraints) (int, int) {
 	if a == Horizontal {
 		return cs.Min.Y, cs.Max.Y
 	}
@@ -41,14 +39,14 @@ func (a Axis) CrossConstraint(cs dim.Constraints) (int, int) {
 }
 
 // Constraints return the Constraints for axis a
-func (a Axis) Constraints(mainMin, mainMax, crossMin, crossMax int) dim.Constraints {
+func (a Axis) Constraints(mainMin, mainMax, crossMin, crossMax int) Constraints {
 	if a == Horizontal {
-		return dim.Constraints{
+		return Constraints{
 			Min: image.Pt(mainMin, crossMin),
 			Max: image.Pt(mainMax, crossMax),
 		}
 	}
-	return dim.Constraints{
+	return Constraints{
 		Min: image.Pt(crossMin, mainMin),
 		Max: image.Pt(crossMax, mainMax),
 	}
