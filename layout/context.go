@@ -28,7 +28,7 @@ type Ctx struct {
 	*op.Ops
 }
 
-// NewContext is a shorthand for
+// NewCtx is a shorthand for
 //
 //   Ctx{
 //     Ops: ops,
@@ -38,8 +38,8 @@ type Ctx struct {
 //     Lim: Exact(e.Size),
 //   }
 //
-// New calls ops.Reset and adjusts ops for e.Insets.
-func NewContext(ops *op.Ops, e system.FrameEvent) Ctx {
+// NewCtx calls ops.Reset and adjusts ops for e.Insets.
+func NewCtx(ops *op.Ops, e system.FrameEvent) Ctx {
 	ops.Reset()
 
 	size := e.Size
