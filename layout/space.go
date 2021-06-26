@@ -17,8 +17,8 @@ func Spacer(width, height float32) spacer {
 }
 
 // Fn lays out a spacer
-func (s spacer) Fn(gtx Context) Dimensions {
-	return Dimensions{
+func (s spacer) Fn(gtx Ctx) Dims {
+	return Dims{
 		Size: image.Point{
 			X: gtx.Px(s.Width),
 			Y: gtx.Px(s.Height),

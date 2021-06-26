@@ -4,20 +4,20 @@ import (
 	"image"
 )
 
-// Constraints define the minimum and maximum dimensions of a layout area
-type Constraints struct {
+// Lim defines the minimum and maximum dimensions of a layout area
+type Lim struct {
 	Min, Max image.Point
 }
 
-// Exact returns the Constraints with the minimum and maximum size set to size
-func Exact(size image.Point) Constraints {
-	return Constraints{
+// Exact returns the Lim with the minimum and maximum size set to size
+func Exact(size image.Point) Lim {
+	return Lim{
 		Min: size, Max: size,
 	}
 }
 
 // Constrain a size so each dimension is in the range [min;max]
-func (c Constraints) Constrain(size image.Point) image.Point {
+func (c Lim) Constrain(size image.Point) image.Point {
 	if min := c.Min.X; size.X < min {
 		size.X = min
 	}
