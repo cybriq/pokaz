@@ -8,7 +8,7 @@ import (
 
 type Dir uint8
 
-type dirSpec struct {
+type Direction struct {
 	Dir
 	Widget
 }
@@ -31,16 +31,16 @@ var directions = []string{
 }
 
 // String returns the name of the direction insetSpec string form
-func (d dirSpec) String() string {
+func (d Direction) String() string {
 	if d.Dir < NW || d.Dir >= endDirections {
 		panic("dir is out of bounds")
 	}
 	return directions[d.Dir]
 }
 
-// Direction creates a new dirSpec
-func Direction(d Dir, w Widget) dirSpec {
-	return dirSpec{
+// NewDirection creates a new Direction
+func NewDirection(d Dir, w Widget) Direction {
+	return Direction{
 		Dir:    d,
 		Widget: w,
 	}
@@ -48,7 +48,7 @@ func Direction(d Dir, w Widget) dirSpec {
 
 // Fn lays out a widget according to the dir. The widget is called with the
 // context constraints minimum cleared.
-func (d dirSpec) Fn(gtx Ctx) Dims {
+func (d Direction) Fn(gtx Ctx) Dims {
 	macro := op.Record(gtx.Ops)
 	cs := gtx.Lim
 	gtx.Lim.Min = image.Point{}
@@ -74,7 +74,7 @@ func (d dirSpec) Fn(gtx Ctx) Dims {
 }
 
 // position calculates widget position according to the direction.
-func (d dirSpec) position(widget, bounds image.Point) image.Point {
+func (d Direction) position(widget, bounds image.Point) image.Point {
 	var p image.Point
 
 	switch d.Dir {

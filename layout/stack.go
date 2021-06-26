@@ -6,37 +6,37 @@ import (
 	"github.com/cybriq/giocore/op"
 )
 
-type stackSpec struct {
+type Stack struct {
 	*stack
 	stackChildren []stackChild
 }
 
-// Stack starts a chain of widgets to compose into a stack
-func Stack() (out *stackSpec) {
-	out = &stackSpec{stack: &stack{}}
+// NewStack starts a chain of widgets to compose into a stack
+func NewStack() (out *Stack) {
+	out = &Stack{stack: &stack{}}
 	return
 }
 
-func (s *stackSpec) Alignment(alignment dirSpec) *stackSpec {
+func (s *Stack) Alignment(alignment Direction) *Stack {
 	s.alignment = alignment
 	return s
 }
 
 // Stacked appends a widget to the stack, the stack's dimensions will be
 // computed from the largest widget insetSpec the stack
-func (s *stackSpec) Stacked(w Widget) (out *stackSpec) {
+func (s *Stack) Stacked(w Widget) (out *Stack) {
 	s.stackChildren = append(s.stackChildren, stacked(w))
 	return s
 }
 
 // Expanded lays out a widget with the same max constraints as the stack
-func (s *stackSpec) Expanded(w Widget) (out *stackSpec) {
+func (s *Stack) Expanded(w Widget) (out *Stack) {
 	s.stackChildren = append(s.stackChildren, expanded(w))
 	return s
 }
 
 // Fn runs the ops queue configured insetSpec the stack
-func (s *stackSpec) Fn(c Ctx) Dims {
+func (s *Stack) Fn(c Ctx) Dims {
 	return s.layout(c, s.stackChildren...)
 }
 
@@ -44,7 +44,7 @@ func (s *stackSpec) Fn(c Ctx) Dims {
 // dir.
 type stack struct {
 	// alignment is the dir to align stackChildren smaller than the available space.
-	alignment dirSpec
+	alignment Direction
 }
 
 // stackChild represents a stackChild for a stack layout.

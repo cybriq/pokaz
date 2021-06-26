@@ -6,43 +6,43 @@ import (
 	"github.com/cybriq/giocore/op"
 )
 
-// flexLayout is a horizontal or vertical stack of widgets with fixed and expanding
+// Flex is a horizontal or vertical stack of widgets with fixed and expanding
 // boxes
-type flexLayout struct {
+type Flex struct {
 	flex
 	children []child
 }
 
-// Flex creates a new flexLayout
-func Flex() (out *flexLayout) {
-	return new(flexLayout)
+// HFlex creates a new Flex
+func HFlex() (out *Flex) {
+	return new(Flex)
 }
 
 // VFlex creates a new vertical flex layout
-func VFlex() (out *flexLayout) {
-	return Flex().Vertical()
+func VFlex() (out *Flex) {
+	return HFlex().Vertical()
 }
 
 // Vertical sets the axis to vertical, otherwise it is horizontal
-func (f *flexLayout) Vertical() (out *flexLayout) {
+func (f *Flex) Vertical() (out *Flex) {
 	f.flex.axis = Vertical
 	return f
 }
 
 // Align sets the alignment to use on each box insetSpec the flex
-func (f *flexLayout) Align(alignment Align) (out *flexLayout) {
+func (f *Flex) Align(alignment Align) (out *Flex) {
 	f.flex.alignment = alignment
 	return f
 }
 
-// Space sets the spacing for the flex
-func (f *flexLayout) Space(spc Spacing) (out *flexLayout) {
+// Spacing sets the spacing for the flex
+func (f *Flex) Spacing(spc Spacing) (out *Flex) {
 	f.flex.spacing = spc
 	return f
 }
 
 // Rigid inserts a string of rigid widget into the flex
-func (f *flexLayout) Rigid(w ...Widget) (out *flexLayout) {
+func (f *Flex) Rigid(w ...Widget) (out *Flex) {
 	for i := range w {
 		f.children = append(f.children, rigid(w[i]))
 	}
@@ -50,7 +50,7 @@ func (f *flexLayout) Rigid(w ...Widget) (out *flexLayout) {
 }
 
 // Flexed inserts a string of flexed widgets into the flex
-func (f *flexLayout) Flexed(weight float32, w ...Widget) (out *flexLayout) {
+func (f *Flex) Flexed(weight float32, w ...Widget) (out *Flex) {
 	for i := range w {
 		f.children = append(f.children, flexed(weight/float32(len(w)), w[i]))
 	}
@@ -58,7 +58,7 @@ func (f *flexLayout) Flexed(weight float32, w ...Widget) (out *flexLayout) {
 }
 
 // Fn runs the ops insetSpec the context using the FlexChildren inside it
-func (f *flexLayout) Fn(c Ctx) Dims {
+func (f *Flex) Fn(c Ctx) Dims {
 	return f.layout(c, f.children...)
 }
 
