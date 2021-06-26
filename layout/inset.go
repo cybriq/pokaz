@@ -2,45 +2,40 @@ package layout
 
 import (
 	"image"
-	
+
 	"github.com/cybriq/giocore/op"
 	"github.com/cybriq/giocore/unit"
 )
 
-type _inset struct {
-	in inset
-	w  Widget
-}
-
-// New creates a padded empty space around a widget
-func New(pad float32, embed Widget) (out *_inset) {
-	out = &_inset{
-		in: uniform(unit.Sp(pad)),
-		w:  embed,
+// Inset creates a padded empty space around a widget
+func Inset(pad float32, embed Widget) (out *inset) {
+	out = &inset{
+		insetSpec: uniform(unit.Sp(pad)),
+		w:         embed,
 	}
 	return
 }
 
 // Embed sets the widget that will be inside the inset
-func (in *_inset) Embed(w Widget) *_inset {
+func (in *inset) Embed(w Widget) *inset {
 	in.w = w
 	return in
 }
 
-// Fn lays out the given widget with the configured context and padding
-func (in *_inset) Fn(c Ctx) Dims {
-	return in.in.layout(c, in.w)
+type insetSpec struct {
+	Top, Right, Bottom, Left unit.Value
 }
 
 // inset adds space around a widget by decreasing its maximum constraints. The
 // minimum constraints will be adjusted to ensure they do not exceed the
 // maximum.
 type inset struct {
-	Top, Right, Bottom, Left unit.Value
+	insetSpec
+	w Widget
 }
 
-// layout an inset.
-func (in inset) layout(gtx Ctx, w Widget) Dims {
+// Fn lays out an inset.
+func (in inset) Fn(gtx Ctx) Dims {
 	top := gtx.Px(in.Top)
 	right := gtx.Px(in.Right)
 	bottom := gtx.Px(in.Bottom)
@@ -65,9 +60,9 @@ func (in inset) layout(gtx Ctx, w Widget) Dims {
 		mcs.Min.Y = mcs.Max.Y
 	}
 	stack := op.Save(gtx.Ops)
-	op.Offset(Point(image.Point{X: left, Y: top})).Add(gtx.Ops)
+	op.Offset(ToPoint(image.Point{X: left, Y: top})).Add(gtx.Ops)
 	gtx.Lim = mcs
-	dm := w(gtx)
+	dm := in.w(gtx)
 	stack.Load()
 	return Dims{
 		Size:     dm.Size.Add(image.Point{X: right + left, Y: top + bottom}),
@@ -76,6 +71,6 @@ func (in inset) layout(gtx Ctx, w Widget) Dims {
 }
 
 // uniform returns an inset with a single inset applied to all edges.
-func uniform(v unit.Value) inset {
-	return inset{Top: v, Right: v, Bottom: v, Left: v}
+func uniform(v unit.Value) insetSpec {
+	return insetSpec{Top: v, Right: v, Bottom: v, Left: v}
 }

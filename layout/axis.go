@@ -12,9 +12,9 @@ const (
 	Vertical
 )
 
-// Convert a point in (x, y) coordinates to (main, cross) coordinates, or vice
+// Convert a point insetSpec (x, y) coordinates to (main, cross) coordinates, or vice
 // versa. Specifically, Convert((x, y)) returns (x, y) unchanged for the
-// horizontal axis, or (y, x) for the vertical axis.
+// Horizontal Axis, or (y, x) for the Vertical Axis.
 func (a Axis) Convert(pt image.Point) image.Point {
 	if a == Horizontal {
 		return pt
@@ -22,7 +22,7 @@ func (a Axis) Convert(pt image.Point) image.Point {
 	return image.Pt(pt.Y, pt.X)
 }
 
-// MainConstraint returns the min and max main Lim for axis a
+// MainConstraint returns the min and max main Constraints for Axis a
 func (a Axis) MainConstraint(cs Lim) (int, int) {
 	if a == Horizontal {
 		return cs.Min.X, cs.Max.X
@@ -30,7 +30,7 @@ func (a Axis) MainConstraint(cs Lim) (int, int) {
 	return cs.Min.Y, cs.Max.Y
 }
 
-// CrossConstraint returns the min and max cross Lim for axis a
+// CrossConstraint returns the min and max cross Constraints for Axis a
 func (a Axis) CrossConstraint(cs Lim) (int, int) {
 	if a == Horizontal {
 		return cs.Min.Y, cs.Max.Y
@@ -38,7 +38,7 @@ func (a Axis) CrossConstraint(cs Lim) (int, int) {
 	return cs.Min.X, cs.Max.X
 }
 
-// Lim return the Lim for axis a
+// Constraints return the Constraints for Axis a
 func (a Axis) Constraints(mainMin, mainMax, crossMin, crossMax int) Lim {
 	if a == Horizontal {
 		return Lim{
