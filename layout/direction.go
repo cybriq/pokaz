@@ -6,10 +6,10 @@ import (
 	"github.com/cybriq/giocore/op"
 )
 
-type Direction uint8
+type Dir uint8
 
 const (
-	NW Direction = iota
+	NW Dir = iota
 	N
 	NE
 	E
@@ -26,7 +26,7 @@ var directions = []string{
 }
 
 // String returns the name of the direction in string form
-func (d Direction) String() string {
+func (d Dir) String() string {
 	if d < 0 || d >= endDirections {
 		panic("dir is out of bounds")
 	}
@@ -35,12 +35,12 @@ func (d Direction) String() string {
 
 // Fn lays out a widget according to the dir. The widget is called with the
 // context constraints minimum cleared.
-func (d Direction) Fn(
-	gtx Context, w Widget,
-) Dimensions {
+func (d Dir) Fn(
+	gtx Ctx, w Widget,
+) Dims {
 	macro := op.Record(gtx.Ops)
-	cs := gtx.Constraints
-	gtx.Constraints.Min = image.Point{}
+	cs := gtx.Lim
+	gtx.Lim.Min = image.Point{}
 	dims := w(gtx)
 	call := macro.Stop()
 	sz := dims.Size
@@ -56,14 +56,14 @@ func (d Direction) Fn(
 	op.Offset(Point(p)).Add(gtx.Ops)
 	call.Add(gtx.Ops)
 
-	return Dimensions{
+	return Dims{
 		Size:     sz,
 		Baseline: dims.Baseline + sz.Y - dims.Size.Y - p.Y,
 	}
 }
 
 // Position calculates widget position according to the direction.
-func (d Direction) Position(widget, bounds image.Point) image.Point {
+func (d Dir) Position(widget, bounds image.Point) image.Point {
 	var p image.Point
 
 	switch d {

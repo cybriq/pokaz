@@ -22,31 +22,31 @@ func (a Axis) Convert(pt image.Point) image.Point {
 	return image.Pt(pt.Y, pt.X)
 }
 
-// MainConstraint returns the min and max main Constraints for axis a
-func (a Axis) MainConstraint(cs Constraints) (int, int) {
+// MainConstraint returns the min and max main Lim for axis a
+func (a Axis) MainConstraint(cs Lim) (int, int) {
 	if a == Horizontal {
 		return cs.Min.X, cs.Max.X
 	}
 	return cs.Min.Y, cs.Max.Y
 }
 
-// CrossConstraint returns the min and max cross Constraints for axis a
-func (a Axis) CrossConstraint(cs Constraints) (int, int) {
+// CrossConstraint returns the min and max cross Lim for axis a
+func (a Axis) CrossConstraint(cs Lim) (int, int) {
 	if a == Horizontal {
 		return cs.Min.Y, cs.Max.Y
 	}
 	return cs.Min.X, cs.Max.X
 }
 
-// Constraints return the Constraints for axis a
-func (a Axis) Constraints(mainMin, mainMax, crossMin, crossMax int) Constraints {
+// Lim return the Lim for axis a
+func (a Axis) Constraints(mainMin, mainMax, crossMin, crossMax int) Lim {
 	if a == Horizontal {
-		return Constraints{
+		return Lim{
 			Min: image.Pt(mainMin, crossMin),
 			Max: image.Pt(mainMax, crossMax),
 		}
 	}
-	return Constraints{
+	return Lim{
 		Min: image.Pt(crossMin, mainMin),
 		Max: image.Pt(crossMax, mainMax),
 	}

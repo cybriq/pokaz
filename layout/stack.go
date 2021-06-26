@@ -17,7 +17,7 @@ func Stack() (out *_stack) {
 	return
 }
 
-func (s *_stack) Alignment(alignment Direction) *_stack {
+func (s *_stack) Alignment(alignment Dir) *_stack {
 	s.alignment = alignment
 	return s
 }
@@ -36,7 +36,7 @@ func (s *_stack) Expanded(w Widget) (out *_stack) {
 }
 
 // Fn runs the ops queue configured in the stack
-func (s *_stack) Fn(c Context) Dimensions {
+func (s *_stack) Fn(c Ctx) Dims {
 	return s.stack.layout(c, s.stackChildren...)
 }
 
@@ -44,7 +44,7 @@ func (s *_stack) Fn(c Context) Dimensions {
 // dir.
 type stack struct {
 	// alignment is the dir to align stackChildren smaller than the available space.
-	alignment Direction
+	alignment Dir
 }
 
 // stackChild represents a stackChild for a stack layout.
@@ -54,7 +54,7 @@ type stackChild struct {
 
 	// Scratch space.
 	call op.CallOp
-	dims Dimensions
+	dims Dims
 }
 
 // stacked returns a stack stackChild that is laid out with no minimum constraints and
@@ -78,13 +78,13 @@ func expanded(w Widget) stackChild {
 // layout a stack of stackChildren. The position of the stackChildren are determined by the
 // specified order, but stacked stackChildren are laid out before expanded stackChildren.
 func (s stack) layout(
-	gtx Context,
+	gtx Ctx,
 	stackChildren ...stackChild,
-) Dimensions {
+) Dims {
 	var maxSZ image.Point
 	// First lay out stacked stackChildren.
 	ct := gtx
-	ct.Constraints.Min = image.Point{}
+	ct.Lim.Min = image.Point{}
 	for i, w := range stackChildren {
 		if w.expanded {
 			continue
@@ -107,7 +107,7 @@ func (s stack) layout(
 			continue
 		}
 		macro := op.Record(gtx.Ops)
-		ct.Constraints.Min = maxSZ
+		ct.Lim.Min = maxSZ
 		d := w.widget(ct)
 		call := macro.Stop()
 		if w := d.Size.X; w > maxSZ.X {
@@ -120,7 +120,7 @@ func (s stack) layout(
 		stackChildren[i].dims = d
 	}
 
-	maxSZ = gtx.Constraints.Constrain(maxSZ)
+	maxSZ = gtx.Lim.Constrain(maxSZ)
 	var baseline int
 	for _, ch := range stackChildren {
 		sz := ch.dims.Size
@@ -147,7 +147,7 @@ func (s stack) layout(
 			}
 		}
 	}
-	return Dimensions{
+	return Dims{
 		Size:     maxSZ,
 		Baseline: baseline,
 	}

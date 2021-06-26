@@ -28,7 +28,7 @@ func (in *_inset) Embed(w Widget) *_inset {
 }
 
 // Fn lays out the given widget with the configured context and padding
-func (in *_inset) Fn(c Context) Dimensions {
+func (in *_inset) Fn(c Ctx) Dims {
 	return in.in.layout(c, in.w)
 }
 
@@ -40,12 +40,12 @@ type inset struct {
 }
 
 // layout an inset.
-func (in inset) layout(gtx Context, w Widget) Dimensions {
+func (in inset) layout(gtx Ctx, w Widget) Dims {
 	top := gtx.Px(in.Top)
 	right := gtx.Px(in.Right)
 	bottom := gtx.Px(in.Bottom)
 	left := gtx.Px(in.Left)
-	mcs := gtx.Constraints
+	mcs := gtx.Lim
 	mcs.Max.X -= left + right
 	if mcs.Max.X < 0 {
 		left = 0
@@ -66,10 +66,10 @@ func (in inset) layout(gtx Context, w Widget) Dimensions {
 	}
 	stack := op.Save(gtx.Ops)
 	op.Offset(Point(image.Point{X: left, Y: top})).Add(gtx.Ops)
-	gtx.Constraints = mcs
+	gtx.Lim = mcs
 	dm := w(gtx)
 	stack.Load()
-	return Dimensions{
+	return Dims{
 		Size:     dm.Size.Add(image.Point{X: right + left, Y: top + bottom}),
 		Baseline: dm.Baseline + bottom,
 	}

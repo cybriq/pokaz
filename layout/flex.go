@@ -6,43 +6,43 @@ import (
 	"github.com/cybriq/giocore/op"
 )
 
-// Layout is a horizontal or vertical stack of widgets with fixed and expanding
+// flexLayout is a horizontal or vertical stack of widgets with fixed and expanding
 // boxes
-type Layout struct {
+type flexLayout struct {
 	flex
 	children []child
 }
 
-// Flex creates a new flex.Layout
-func Flex() (out *Layout) {
-	return new(Layout)
+// Flex creates a new flexLayout
+func Flex() (out *flexLayout) {
+	return new(flexLayout)
 }
 
 // VFlex creates a new vertical flex layout
-func VFlex() (out *Layout) {
+func VFlex() (out *flexLayout) {
 	return Flex().Vertical()
 }
 
 // Vertical sets the axis to vertical, otherwise it is horizontal
-func (f *Layout) Vertical() (out *Layout) {
+func (f *flexLayout) Vertical() (out *flexLayout) {
 	f.flex.axis = Vertical
 	return f
 }
 
 // Align sets the alignment to use on each box in the flex
-func (f *Layout) Align(alignment Alignment) (out *Layout) {
+func (f *flexLayout) Align(alignment Align) (out *flexLayout) {
 	f.flex.alignment = alignment
 	return f
 }
 
 // Space sets the spacing for the flex
-func (f *Layout) Space(spc Spacing) (out *Layout) {
+func (f *flexLayout) Space(spc Spacing) (out *flexLayout) {
 	f.flex.spacing = spc
 	return f
 }
 
 // Rigid inserts a string of rigid widget into the flex
-func (f *Layout) Rigid(w ...Widget) (out *Layout) {
+func (f *flexLayout) Rigid(w ...Widget) (out *flexLayout) {
 	for i := range w {
 		f.children = append(f.children, rigid(w[i]))
 	}
@@ -50,7 +50,7 @@ func (f *Layout) Rigid(w ...Widget) (out *Layout) {
 }
 
 // Flexed inserts a string of flexed widgets into the flex
-func (f *Layout) Flexed(weight float32, w ...Widget) (out *Layout) {
+func (f *flexLayout) Flexed(weight float32, w ...Widget) (out *flexLayout) {
 	for i := range w {
 		f.children = append(f.children, flexed(weight/float32(len(w)), w[i]))
 	}
@@ -58,7 +58,7 @@ func (f *Layout) Flexed(weight float32, w ...Widget) (out *Layout) {
 }
 
 // Fn runs the ops in the context using the FlexChildren inside it
-func (f *Layout) Fn(c Context) Dimensions {
+func (f *flexLayout) Fn(c Ctx) Dims {
 	return f.flex.layout(c, f.children...)
 }
 
@@ -71,7 +71,7 @@ type flex struct {
 	// spacing controls the distribution of space left after layout.
 	spacing Spacing
 	// alignment is the alignment in the cross axis.
-	alignment Alignment
+	alignment Align
 	// weightSum is the sum of weights used for the weighted size of flexed
 	// children. If weightSum is zero, the sum of all flexed weights is used.
 	weightSum float32
@@ -86,7 +86,7 @@ type child struct {
 	
 	// Scratch space.
 	call op.CallOp
-	dims Dimensions
+	dims Dims
 }
 
 // Spacing determine the spacing mode for a flex.
@@ -130,9 +130,9 @@ func flexed(weight float32, widget Widget) child {
 
 // layout a list of children. The position of the children are determined by the
 // specified order, but rigid children are laid out before flexed children.
-func (f flex) layout(gtx Context, children ...child) Dimensions {
+func (f flex) layout(gtx Ctx, children ...child) Dims {
 	size := 0
-	cs := gtx.Constraints
+	cs := gtx.Lim
 	mainMin, mainMax := f.axis.MainConstraint(cs)
 	crossMin, crossMax := f.axis.CrossConstraint(cs)
 	remaining := mainMax
@@ -145,7 +145,7 @@ func (f flex) layout(gtx Context, children ...child) Dimensions {
 			continue
 		}
 		macro := op.Record(gtx.Ops)
-		cgtx.Constraints = f.axis.
+		cgtx.Lim = f.axis.
 			Constraints(0, remaining, crossMin, crossMax)
 		dm := child.widget(cgtx)
 		c := macro.Stop()
@@ -181,7 +181,7 @@ func (f flex) layout(gtx Context, children ...child) Dimensions {
 			}
 		}
 		macro := op.Record(gtx.Ops)
-		cgtx.Constraints = f.axis.Constraints(flexSize, flexSize, crossMin,
+		cgtx.Lim = f.axis.Constraints(flexSize, flexSize, crossMin,
 			crossMax)
 		dm := child.widget(cgtx)
 		c := macro.Stop()
@@ -269,7 +269,7 @@ func (f flex) layout(gtx Context, children ...child) Dimensions {
 		}
 	}
 	sz := f.axis.Convert(image.Pt(mainSize, maxCross))
-	return Dimensions{Size: sz, Baseline: sz.Y - maxBaseline}
+	return Dims{Size: sz, Baseline: sz.Y - maxBaseline}
 }
 
 func (s Spacing) String() string {
