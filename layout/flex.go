@@ -1,28 +1,77 @@
-// SPDX-License-Identifier: Unlicense OR MIT
-
-package flex
+package layout
 
 import (
 	"image"
-
+	
 	"github.com/cybriq/giocore/op"
-	"github.com/cybriq/pokaz/layout/align"
-	"github.com/cybriq/pokaz/layout/axis"
-	"github.com/cybriq/pokaz/layout/conv"
-	"github.com/cybriq/pokaz/layout/ctx"
-	"github.com/cybriq/pokaz/layout/dim"
-	"github.com/cybriq/pokaz/layout/wdg"
 )
+
+// Layout is a horizontal or vertical stack of widgets with fixed and expanding
+// boxes
+type Layout struct {
+	flex
+	children []child
+}
+
+// Flex creates a new flex.Layout
+func Flex() (out *Layout) {
+	return new(Layout)
+}
+
+// VFlex creates a new vertical flex layout
+func VFlex() (out *Layout) {
+	return Flex().Vertical()
+}
+
+// Vertical sets the axis to vertical, otherwise it is horizontal
+func (f *Layout) Vertical() (out *Layout) {
+	f.flex.axis = Vertical
+	return f
+}
+
+// Align sets the alignment to use on each box in the flex
+func (f *Layout) Align(alignment Alignment) (out *Layout) {
+	f.flex.alignment = alignment
+	return f
+}
+
+// Space sets the spacing for the flex
+func (f *Layout) Space(spc Spacing) (out *Layout) {
+	f.flex.spacing = spc
+	return f
+}
+
+// Rigid inserts a string of rigid widget into the flex
+func (f *Layout) Rigid(w ...Widget) (out *Layout) {
+	for i := range w {
+		f.children = append(f.children, rigid(w[i]))
+	}
+	return f
+}
+
+// Flexed inserts a string of flexed widgets into the flex
+func (f *Layout) Flexed(weight float32, w ...Widget) (out *Layout) {
+	for i := range w {
+		f.children = append(f.children, flexed(weight/float32(len(w)), w[i]))
+	}
+	return f
+}
+
+// Fn runs the ops in the context using the FlexChildren inside it
+func (f *Layout) Fn(c Context) Dimensions {
+	return f.flex.layout(c, f.children...)
+}
+
 
 // flex lays out child elements along an axis, according to alignment and
 // weights.
 type flex struct {
 	// axis is the main axis, either Horizontal or Vertical.
-	axis axis.Axis
+	axis Axis
 	// spacing controls the distribution of space left after layout.
 	spacing Spacing
 	// alignment is the alignment in the cross axis.
-	alignment align.Alignment
+	alignment Alignment
 	// weightSum is the sum of weights used for the weighted size of flexed
 	// children. If weightSum is zero, the sum of all flexed weights is used.
 	weightSum float32
@@ -32,12 +81,12 @@ type flex struct {
 type child struct {
 	flex   bool
 	weight float32
-
-	widget wdg.Widget
-
+	
+	widget Widget
+	
 	// Scratch space.
 	call op.CallOp
-	dims dim.Dimensions
+	dims Dimensions
 }
 
 // Spacing determine the spacing mode for a flex.
@@ -62,7 +111,7 @@ const (
 )
 
 // rigid returns a flex child with a maximal constraint of the remaining space.
-func rigid(widget wdg.Widget) child {
+func rigid(widget Widget) child {
 	return child{
 		widget: widget,
 	}
@@ -71,7 +120,7 @@ func rigid(widget wdg.Widget) child {
 // flexed returns a flex child forced to take up weight fraction of the space
 // left over from rigid children. The fraction is weight divided by either the
 // weight sum of all flexed children, or the flex weightSum if it is nonzero.
-func flexed(weight float32, widget wdg.Widget) child {
+func flexed(weight float32, widget Widget) child {
 	return child{
 		flex:   true,
 		weight: weight,
@@ -81,9 +130,9 @@ func flexed(weight float32, widget wdg.Widget) child {
 
 // layout a list of children. The position of the children are determined by the
 // specified order, but rigid children are laid out before flexed children.
-func (f flex) layout(gtx ctx.Context, children ...child) dim.Dimensions {
+func (f flex) layout(gtx Context, children ...child) Dimensions {
 	size := 0
-	cs := gtx.Constraints()
+	cs := gtx.Constraints
 	mainMin, mainMax := f.axis.MainConstraint(cs)
 	crossMin, crossMax := f.axis.CrossConstraint(cs)
 	remaining := mainMax
@@ -95,9 +144,9 @@ func (f flex) layout(gtx ctx.Context, children ...child) dim.Dimensions {
 			totalWeight += child.weight
 			continue
 		}
-		macro := op.Record(gtx.Ops())
-		cgtx.SetConstraints(f.axis.
-			Constraints(0, remaining, crossMin, crossMax))
+		macro := op.Record(gtx.Ops)
+		cgtx.Constraints = f.axis.
+			Constraints(0, remaining, crossMin, crossMax)
 		dm := child.widget(cgtx)
 		c := macro.Stop()
 		sz := f.axis.Convert(dm.Size).X
@@ -131,10 +180,9 @@ func (f flex) layout(gtx ctx.Context, children ...child) dim.Dimensions {
 				flexSize = remaining
 			}
 		}
-		macro := op.Record(gtx.Ops())
-		cgtx.SetConstraints(
-			f.axis.Constraints(
-				flexSize, flexSize, crossMin, crossMax))
+		macro := op.Record(gtx.Ops)
+		cgtx.Constraints = f.axis.Constraints(flexSize, flexSize, crossMin,
+			crossMax)
 		dm := child.widget(cgtx)
 		c := macro.Stop()
 		sz := f.axis.Convert(dm.Size).X
@@ -178,19 +226,19 @@ func (f flex) layout(gtx ctx.Context, children ...child) dim.Dimensions {
 		b := dm.Size.Y - dm.Baseline
 		var cross int
 		switch f.alignment {
-		case align.End:
+		case End:
 			cross = maxCross - f.axis.Convert(dm.Size).Y
-		case align.Middle:
+		case Middle:
 			cross = (maxCross - f.axis.Convert(dm.Size).Y) / 2
-		case align.Baseline:
-			if f.axis == axis.Horizontal {
+		case Baseline:
+			if f.axis == Horizontal {
 				cross = maxBaseline - b
 			}
 		}
-		stack := op.Save(gtx.Ops())
+		stack := op.Save(gtx.Ops)
 		pt := f.axis.Convert(image.Pt(mainSize, cross))
-		op.Offset(conv.Point(pt)).Add(gtx.Ops())
-		child.call.Add(gtx.Ops())
+		op.Offset(Point(pt)).Add(gtx.Ops)
+		child.call.Add(gtx.Ops)
 		stack.Load()
 		mainSize += f.axis.Convert(dm.Size).X
 		if i < len(children)-1 {
@@ -221,7 +269,7 @@ func (f flex) layout(gtx ctx.Context, children ...child) dim.Dimensions {
 		}
 	}
 	sz := f.axis.Convert(image.Pt(mainSize, maxCross))
-	return dim.Dimensions{Size: sz, Baseline: sz.Y - maxBaseline}
+	return Dimensions{Size: sz, Baseline: sz.Y - maxBaseline}
 }
 
 func (s Spacing) String() string {

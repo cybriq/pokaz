@@ -1,4 +1,4 @@
-package align
+package layout
 
 type Alignment uint8
 

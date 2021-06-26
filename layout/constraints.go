@@ -1,4 +1,4 @@
-package dim
+package layout
 
 import (
 	"image"

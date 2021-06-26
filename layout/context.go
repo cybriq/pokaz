@@ -1,4 +1,4 @@
-package ctx
+package layout
 
 import (
 	"time"
@@ -8,61 +8,26 @@ import (
 	"github.com/cybriq/giocore/io/system"
 	"github.com/cybriq/giocore/op"
 	"github.com/cybriq/giocore/unit"
-	"github.com/cybriq/pokaz/layout/ctx/proto"
-	"github.com/cybriq/pokaz/layout/dim"
 )
 
 // Context carries the state needed by almost all layouts and widgets. A zero
 // value Context never returns events, map units to pixels with a scale of 1.0,
 // and returns the zero time from Now.
-//
-// This implementation is intentionally using value receivers as each time it
-// is passed through it defines the base context for the next widget.
 type Context struct {
 	// Constraints track the constraints for the active widget or layout.
-	constraints dim.Constraints
+	Constraints Constraints
 
-	metric unit.Metric
+	Metric unit.Metric
 	// By convention, a nil Queue is a signal to widgets to draw themselves in a
 	// disabled state.
-	queue event.Queue
-
-	// if the queue is enabled (causes widgets to render greyed out)
-	enabled bool
-
+	Queue event.Queue
 	// Now is the animation time.
-	now time.Time
+	Now time.Time
 
-	ops *op.Ops
+	*op.Ops
 }
 
-var _ proto.Context = Context{}
-
-func (c Context) Constraints() dim.Constraints {
-	return c.constraints
-}
-
-func (c Context) SetConstraints(constraints dim.Constraints) {
-	c.constraints = constraints
-}
-
-func (c Context) Metric() unit.Metric {
-	return c.metric
-}
-
-func (c Context) Queue() event.Queue {
-	return c.queue
-}
-
-func (c Context) Now() time.Time {
-	return c.now
-}
-
-func (c Context) Ops() *op.Ops {
-	return c.ops
-}
-
-// New is a shorthand for
+// NewContext is a shorthand for
 //
 //   Context{
 //     Ops: ops,
@@ -73,7 +38,7 @@ func (c Context) Ops() *op.Ops {
 //   }
 //
 // New calls ops.Reset and adjusts ops for e.Insets.
-func New(ops *op.Ops, e system.FrameEvent) Context {
+func NewContext(ops *op.Ops, e system.FrameEvent) Context {
 	ops.Reset()
 
 	size := e.Size
@@ -93,26 +58,26 @@ func New(ops *op.Ops, e system.FrameEvent) Context {
 	}
 
 	return Context{
-		ops:         ops,
-		now:         e.Now,
-		queue:       e.Queue,
-		metric:      e.Metric,
-		constraints: dim.Exact(size),
+		Ops:         ops,
+		Now:         e.Now,
+		Queue:       e.Queue,
+		Metric:      e.Metric,
+		Constraints: Exact(size),
 	}
 }
 
 // Px maps the value to pixels.
 func (c Context) Px(v unit.Value) int {
-	return c.metric.Px(v)
+	return c.Metric.Px(v)
 }
 
 // Events return the events available for the key. If no queue is configured,
 // Events returns nil.
 func (c Context) Events(k event.Tag) []event.Event {
-	if c.queue == nil {
+	if c.Queue == nil {
 		return nil
 	}
-	return c.queue.Events(k)
+	return c.Queue.Events(k)
 }
 
 // Disabled returns a copy of this ctx with a nil Queue, blocking events to
@@ -120,7 +85,7 @@ func (c Context) Events(k event.Tag) []event.Event {
 //
 // By convention, a nil Queue is a signal to widgets to draw themselves in a
 // disabled state.
-func (c Context) Disabled() proto.Context {
-	c.queue = nil
+func (c Context) Disabled() Context {
+	c.Queue = nil
 	return c
 }
