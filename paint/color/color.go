@@ -8,12 +8,11 @@ import (
 	"image/color"
 )
 
-
 type Color struct {
 	color.NRGBA
 }
 
-func getColor(r,g,b,a uint8) Color {
+func getColor(r, g, b, a uint8) Color {
 	return Color{
 		NRGBA: color.NRGBA{R: r, G: g, B: b, A: a},
 	}
