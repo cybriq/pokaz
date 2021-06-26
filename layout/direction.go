@@ -2,11 +2,16 @@ package layout
 
 import (
 	"image"
-	
+
 	"github.com/cybriq/giocore/op"
 )
 
 type Dir uint8
+
+type dirSpec struct {
+	Dir
+	Widget
+}
 
 const (
 	NW Dir = iota
@@ -25,23 +30,29 @@ var directions = []string{
 	"NW", "N", "NE", "E", "SE", "S", "SW", "W", "Center",
 }
 
-// String returns the name of the direction in string form
-func (d Dir) String() string {
-	if d < 0 || d >= endDirections {
+// String returns the name of the direction insetSpec string form
+func (d dirSpec) String() string {
+	if d.Dir < NW || d.Dir >= endDirections {
 		panic("dir is out of bounds")
 	}
-	return directions[d]
+	return directions[d.Dir]
+}
+
+// Direction creates a new dirSpec
+func Direction(d Dir, w Widget) dirSpec {
+	return dirSpec{
+		Dir:    d,
+		Widget: w,
+	}
 }
 
 // Fn lays out a widget according to the dir. The widget is called with the
 // context constraints minimum cleared.
-func (d Dir) Fn(
-	gtx Ctx, w Widget,
-) Dims {
+func (d dirSpec) Fn(gtx Ctx) Dims {
 	macro := op.Record(gtx.Ops)
 	cs := gtx.Lim
 	gtx.Lim.Min = image.Point{}
-	dims := w(gtx)
+	dims := d.Widget(gtx)
 	call := macro.Stop()
 	sz := dims.Size
 	if sz.X < cs.Min.X {
@@ -52,8 +63,8 @@ func (d Dir) Fn(
 	}
 
 	defer op.Save(gtx.Ops).Load()
-	p := d.Position(dims.Size, sz)
-	op.Offset(Point(p)).Add(gtx.Ops)
+	p := d.position(dims.Size, sz)
+	op.Offset(ToPoint(p)).Add(gtx.Ops)
 	call.Add(gtx.Ops)
 
 	return Dims{
@@ -62,18 +73,18 @@ func (d Dir) Fn(
 	}
 }
 
-// Position calculates widget position according to the direction.
-func (d Dir) Position(widget, bounds image.Point) image.Point {
+// position calculates widget position according to the direction.
+func (d dirSpec) position(widget, bounds image.Point) image.Point {
 	var p image.Point
 
-	switch d {
+	switch d.Dir {
 	case N, S, Center:
 		p.X = (bounds.X - widget.X) / 2
 	case NE, SE, E:
 		p.X = bounds.X - widget.X
 	}
 
-	switch d {
+	switch d.Dir {
 	case W, Center, E:
 		p.Y = (bounds.Y - widget.Y) / 2
 	case SW, S, SE:

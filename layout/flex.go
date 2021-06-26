@@ -29,7 +29,7 @@ func (f *flexLayout) Vertical() (out *flexLayout) {
 	return f
 }
 
-// Align sets the alignment to use on each box in the flex
+// Align sets the alignment to use on each box insetSpec the flex
 func (f *flexLayout) Align(alignment Align) (out *flexLayout) {
 	f.flex.alignment = alignment
 	return f
@@ -57,9 +57,9 @@ func (f *flexLayout) Flexed(weight float32, w ...Widget) (out *flexLayout) {
 	return f
 }
 
-// Fn runs the ops in the context using the FlexChildren inside it
+// Fn runs the ops insetSpec the context using the FlexChildren inside it
 func (f *flexLayout) Fn(c Ctx) Dims {
-	return f.flex.layout(c, f.children...)
+	return f.layout(c, f.children...)
 }
 
 
@@ -70,7 +70,7 @@ type flex struct {
 	axis Axis
 	// spacing controls the distribution of space left after layout.
 	spacing Spacing
-	// alignment is the alignment in the cross axis.
+	// alignment is the alignment insetSpec the cross axis.
 	alignment Align
 	// weightSum is the sum of weights used for the weighted size of flexed
 	// children. If weightSum is zero, the sum of all flexed weights is used.
@@ -237,7 +237,7 @@ func (f flex) layout(gtx Ctx, children ...child) Dims {
 		}
 		stack := op.Save(gtx.Ops)
 		pt := f.axis.Convert(image.Pt(mainSize, cross))
-		op.Offset(Point(pt)).Add(gtx.Ops)
+		op.Offset(ToPoint(pt)).Add(gtx.Ops)
 		child.call.Add(gtx.Ops)
 		stack.Load()
 		mainSize += f.axis.Convert(dm.Size).X

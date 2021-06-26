@@ -6,45 +6,45 @@ import (
 	"github.com/cybriq/giocore/op"
 )
 
-type _stack struct {
+type stackSpec struct {
 	*stack
 	stackChildren []stackChild
 }
 
 // Stack starts a chain of widgets to compose into a stack
-func Stack() (out *_stack) {
-	out = &_stack{stack: &stack{}}
+func Stack() (out *stackSpec) {
+	out = &stackSpec{stack: &stack{}}
 	return
 }
 
-func (s *_stack) Alignment(alignment Dir) *_stack {
+func (s *stackSpec) Alignment(alignment dirSpec) *stackSpec {
 	s.alignment = alignment
 	return s
 }
 
 // Stacked appends a widget to the stack, the stack's dimensions will be
-// computed from the largest widget in the stack
-func (s *_stack) Stacked(w Widget) (out *_stack) {
+// computed from the largest widget insetSpec the stack
+func (s *stackSpec) Stacked(w Widget) (out *stackSpec) {
 	s.stackChildren = append(s.stackChildren, stacked(w))
 	return s
 }
 
 // Expanded lays out a widget with the same max constraints as the stack
-func (s *_stack) Expanded(w Widget) (out *_stack) {
+func (s *stackSpec) Expanded(w Widget) (out *stackSpec) {
 	s.stackChildren = append(s.stackChildren, expanded(w))
 	return s
 }
 
-// Fn runs the ops queue configured in the stack
-func (s *_stack) Fn(c Ctx) Dims {
-	return s.stack.layout(c, s.stackChildren...)
+// Fn runs the ops queue configured insetSpec the stack
+func (s *stackSpec) Fn(c Ctx) Dims {
+	return s.layout(c, s.stackChildren...)
 }
 
 // stack lays out stackChild elements on top of each other, according to an alignment
 // dir.
 type stack struct {
 	// alignment is the dir to align stackChildren smaller than the available space.
-	alignment Dir
+	alignment dirSpec
 }
 
 // stackChild represents a stackChild for a stack layout.
@@ -125,20 +125,20 @@ func (s stack) layout(
 	for _, ch := range stackChildren {
 		sz := ch.dims.Size
 		var p image.Point
-		switch s.alignment {
+		switch s.alignment.Dir {
 		case N, S, Center:
 			p.X = (maxSZ.X - sz.X) / 2
 		case NE, SE, E:
 			p.X = maxSZ.X - sz.X
 		}
-		switch s.alignment {
+		switch s.alignment.Dir {
 		case W, Center, E:
 			p.Y = (maxSZ.Y - sz.Y) / 2
 		case SW, S, SE:
 			p.Y = maxSZ.Y - sz.Y
 		}
 		stack := op.Save(gtx.Ops)
-		op.Offset(Point(p)).Add(gtx.Ops)
+		op.Offset(ToPoint(p)).Add(gtx.Ops)
 		ch.call.Add(gtx.Ops)
 		stack.Load()
 		if baseline == 0 {
