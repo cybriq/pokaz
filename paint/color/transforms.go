@@ -83,7 +83,7 @@ func (c Color) Saturate(amount float64) (o Color) {
 	return
 }
 
-//Desaturate greys out a color by a given degree.
+// Desaturate greys out a color by a given degree.
 func (c Color) Desaturate(amount float64) (o Color) {
 	amount = clampFactor(amount)
 	h, s, v := colorsys.Rgb2Hsv(uint32(c.R), uint32(c.G), uint32(c.B))

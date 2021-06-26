@@ -8,7 +8,7 @@ import (
 
 type _stack struct {
 	*stack
-	children []child
+	stackChildren []stackChild
 }
 
 // Stack starts a chain of widgets to compose into a stack
@@ -25,30 +25,30 @@ func (s *_stack) Alignment(alignment Direction) *_stack {
 // Stacked appends a widget to the stack, the stack's dimensions will be
 // computed from the largest widget in the stack
 func (s *_stack) Stacked(w Widget) (out *_stack) {
-	s.children = append(s.children, stacked(w))
+	s.stackChildren = append(s.stackChildren, stacked(w))
 	return s
 }
 
 // Expanded lays out a widget with the same max constraints as the stack
 func (s *_stack) Expanded(w Widget) (out *_stack) {
-	s.children = append(s.children, expanded(w))
+	s.stackChildren = append(s.stackChildren, expanded(w))
 	return s
 }
 
 // Fn runs the ops queue configured in the stack
 func (s *_stack) Fn(c Context) Dimensions {
-	return s.stack.layout(c, s.children...)
+	return s.stack.layout(c, s.stackChildren...)
 }
 
-// stack lays out child elements on top of each other, according to an alignment
+// stack lays out stackChild elements on top of each other, according to an alignment
 // dir.
 type stack struct {
-	// alignment is the dir to align children smaller than the available space.
+	// alignment is the dir to align stackChildren smaller than the available space.
 	alignment Direction
 }
 
-// child represents a child for a stack layout.
-type child struct {
+// stackChild represents a stackChild for a stack layout.
+type stackChild struct {
 	expanded bool
 	widget   Widget
 
@@ -57,35 +57,35 @@ type child struct {
 	dims Dimensions
 }
 
-// stacked returns a stack child that is laid out with no minimum constraints and
+// stacked returns a stack stackChild that is laid out with no minimum constraints and
 // maximum constraints passed to stack.layout.
-func stacked(w Widget) child {
-	return child{
+func stacked(w Widget) stackChild {
+	return stackChild{
 		widget: w,
 	}
 }
 
-// expanded returns a stack child with the minimum constraints set to the largest
-// stacked child. The maximum constraints are set to the same as passed to
+// expanded returns a stack stackChild with the minimum constraints set to the largest
+// stacked stackChild. The maximum constraints are set to the same as passed to
 // stack.layout.
-func expanded(w Widget) child {
-	return child{
+func expanded(w Widget) stackChild {
+	return stackChild{
 		expanded: true,
 		widget:   w,
 	}
 }
 
-// layout a stack of children. The position of the children are determined by the
-// specified order, but stacked children are laid out before expanded children.
+// layout a stack of stackChildren. The position of the stackChildren are determined by the
+// specified order, but stacked stackChildren are laid out before expanded stackChildren.
 func (s stack) layout(
 	gtx Context,
-	children ...child,
+	stackChildren ...stackChild,
 ) Dimensions {
 	var maxSZ image.Point
-	// First lay out stacked children.
+	// First lay out stacked stackChildren.
 	ct := gtx
 	ct.Constraints.Min = image.Point{}
-	for i, w := range children {
+	for i, w := range stackChildren {
 		if w.expanded {
 			continue
 		}
@@ -98,11 +98,11 @@ func (s stack) layout(
 		if h := d.Size.Y; h > maxSZ.Y {
 			maxSZ.Y = h
 		}
-		children[i].call = call
-		children[i].dims = d
+		stackChildren[i].call = call
+		stackChildren[i].dims = d
 	}
-	// Then lay out expanded children.
-	for i, w := range children {
+	// Then lay out expanded stackChildren.
+	for i, w := range stackChildren {
 		if !w.expanded {
 			continue
 		}
@@ -116,13 +116,13 @@ func (s stack) layout(
 		if h := d.Size.Y; h > maxSZ.Y {
 			maxSZ.Y = h
 		}
-		children[i].call = call
-		children[i].dims = d
+		stackChildren[i].call = call
+		stackChildren[i].dims = d
 	}
 
 	maxSZ = gtx.Constraints.Constrain(maxSZ)
 	var baseline int
-	for _, ch := range children {
+	for _, ch := range stackChildren {
 		sz := ch.dims.Size
 		var p image.Point
 		switch s.alignment {

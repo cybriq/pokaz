@@ -93,21 +93,21 @@ type child struct {
 type Spacing uint8
 
 const (
-	// End leaves space at the end.
-	End Spacing = iota
-	// Start leaves space at the start.
-	Start
-	// Sides share space between the start and end.
-	Sides
-	// Around distributes space evenly between children, with half as much space
+	// SpaceEnd leaves space at the end.
+	SpaceEnd Spacing = iota
+	// SpaceStart leaves space at the start.
+	SpaceStart
+	// SpaceSides share space between the start and end.
+	SpaceSides
+	// SpaceAround distributes space evenly between children, with half as much space
 	// at the start and end.
-	Around
-	// Between distributes space evenly between children, leaving no space at
+	SpaceAround
+	// SpaceBetween distributes space evenly between children, leaving no space at
 	// the start and end.
-	Between
-	// Evenly distributes space evenly between children and at the start and
+	SpaceBetween
+	// SpaceEvenly distributes space evenly between children and at the start and
 	// end.
-	Evenly
+	SpaceEvenly
 )
 
 // rigid returns a flex child with a maximal constraint of the remaining space.
@@ -210,13 +210,13 @@ func (f flex) layout(gtx Context, children ...child) Dimensions {
 	}
 	var mainSize int
 	switch f.spacing {
-	case Sides:
+	case SpaceSides:
 		mainSize += space / 2
-	case Start:
+	case SpaceStart:
 		mainSize += space
-	case Evenly:
+	case SpaceEvenly:
 		mainSize += space / (1 + len(children))
-	case Around:
+	case SpaceAround:
 		if len(children) > 0 {
 			mainSize += space / (len(children) * 2)
 		}
@@ -243,13 +243,13 @@ func (f flex) layout(gtx Context, children ...child) Dimensions {
 		mainSize += f.axis.Convert(dm.Size).X
 		if i < len(children)-1 {
 			switch f.spacing {
-			case Evenly:
+			case SpaceEvenly:
 				mainSize += space / (1 + len(children))
-			case Around:
+			case SpaceAround:
 				if len(children) > 0 {
 					mainSize += space / len(children)
 				}
-			case Between:
+			case SpaceBetween:
 				if len(children) > 1 {
 					mainSize += space / (len(children) - 1)
 				}
@@ -257,13 +257,13 @@ func (f flex) layout(gtx Context, children ...child) Dimensions {
 		}
 	}
 	switch f.spacing {
-	case Sides:
+	case SpaceSides:
 		mainSize += space / 2
-	case End:
+	case SpaceEnd:
 		mainSize += space
-	case Evenly:
+	case SpaceEvenly:
 		mainSize += space / (1 + len(children))
-	case Around:
+	case SpaceAround:
 		if len(children) > 0 {
 			mainSize += space / (len(children) * 2)
 		}
@@ -274,17 +274,17 @@ func (f flex) layout(gtx Context, children ...child) Dimensions {
 
 func (s Spacing) String() string {
 	switch s {
-	case End:
+	case SpaceEnd:
 		return "End"
-	case Start:
+	case SpaceStart:
 		return "Start"
-	case Sides:
+	case SpaceSides:
 		return "Sides"
-	case Around:
+	case SpaceAround:
 		return "Around"
-	case Between:
+	case SpaceBetween:
 		return "Around"
-	case Evenly:
+	case SpaceEvenly:
 		return "Evenly"
 	default:
 		panic("unreachable")
