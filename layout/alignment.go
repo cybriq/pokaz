@@ -1,9 +1,9 @@
-package align
+package layout
 
-type Alignment uint8
+type Align uint8
 
 const (
-	Start Alignment = iota
+	Start Align = iota
 	End
 	Middle
 	Baseline
@@ -14,7 +14,7 @@ var aligners = []string{
 	"Start", "End", "Middle", "Baseline",
 }
 
-func (a Alignment) String() string {
+func (a Align) String() string {
 	if a < 0 || a >= endAlign {
 		panic("alignment value out of range")
 	}
