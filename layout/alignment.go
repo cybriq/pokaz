@@ -15,7 +15,7 @@ var aligners = []string{
 }
 
 func (a Align) String() string {
-	if a < 0 || a >= endAlign {
+	if a < Start || a >= endAlign {
 		panic("alignment value out of range")
 	}
 	return aligners[a]
