@@ -16,7 +16,7 @@ func Exact(size image.Point) Lim {
 	}
 }
 
-// Constrain a size so each dimension is insetSpec the range [min;max]
+// Constrain a size so each dimension is in the range [min;max]
 func (c Lim) Constrain(size image.Point) image.Point {
 	if min := c.Min.X; size.X < min {
 		size.X = min

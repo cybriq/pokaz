@@ -70,7 +70,7 @@ func (in Inset) Fn(gtx Ctx) Dims {
 	}
 }
 
-// uniform returns an Inset with a single Inset applied to all edges.
+// uniform returns an Inset with a single inset applied to all edges.
 func uniform(v unit.Value) insetSpec {
 	return insetSpec{Top: v, Right: v, Bottom: v, Left: v}
 }

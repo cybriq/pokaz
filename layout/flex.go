@@ -29,7 +29,7 @@ func (f *Flex) Vertical() (out *Flex) {
 	return f
 }
 
-// Align sets the alignment to use on each box insetSpec the flex
+// Align sets the alignment to use on each box in the flex
 func (f *Flex) Align(alignment Align) (out *Flex) {
 	f.flex.alignment = alignment
 	return f
@@ -57,7 +57,7 @@ func (f *Flex) Flexed(weight float32, w ...Widget) (out *Flex) {
 	return f
 }
 
-// Fn runs the ops insetSpec the context using the FlexChildren inside it
+// Fn runs the ops in the context using the FlexChildren inside it
 func (f *Flex) Fn(c Ctx) Dims {
 	return f.layout(c, f.children...)
 }
@@ -70,10 +70,11 @@ type flex struct {
 	axis Axis
 	// spacing controls the distribution of space left after layout.
 	spacing Spacing
-	// alignment is the alignment insetSpec the cross axis.
+	// alignment is the alignment in the cross axis.
 	alignment Align
 	// weightSum is the sum of weights used for the weighted size of flexed
-	// children. If weightSum is zero, the sum of all flexed weights is used.
+	// children. If weightSum is zero, the sum of all flexed weights is
+	// used.
 	weightSum float32
 }
 
@@ -99,14 +100,14 @@ const (
 	SpaceStart
 	// SpaceSides share space between the start and end.
 	SpaceSides
-	// SpaceAround distributes space evenly between children, with half as much space
-	// at the start and end.
+	// SpaceAround distributes space evenly between children, with half as
+	// much space at the start and end.
 	SpaceAround
-	// SpaceBetween distributes space evenly between children, leaving no space at
-	// the start and end.
+	// SpaceBetween distributes space evenly between children, leaving no
+	// space at the start and end.
 	SpaceBetween
-	// SpaceEvenly distributes space evenly between children and at the start and
-	// end.
+	// SpaceEvenly distributes space evenly between children and at the
+	// start and end.
 	SpaceEvenly
 )
 

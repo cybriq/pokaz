@@ -6,7 +6,7 @@ import (
 	"github.com/cybriq/giocore/unit"
 )
 
-// Spacer adds space between widgets.
+// Spacer adds space between widgets
 type Spacer struct {
 	Width, Height unit.Value
 }

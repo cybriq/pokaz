@@ -6,6 +6,7 @@ import (
 	"github.com/cybriq/giocore/op"
 )
 
+// Stack is a series of widgets drawn over top of each other
 type Stack struct {
 	*stack
 	stackChildren []stackChild
@@ -23,7 +24,7 @@ func (s *Stack) Alignment(alignment Direction) *Stack {
 }
 
 // Stacked appends a widget to the stack, the stack's dimensions will be
-// computed from the largest widget insetSpec the stack
+// computed from the largest widget in the stack
 func (s *Stack) Stacked(w Widget) (out *Stack) {
 	s.stackChildren = append(s.stackChildren, stacked(w))
 	return s
@@ -35,7 +36,7 @@ func (s *Stack) Expanded(w Widget) (out *Stack) {
 	return s
 }
 
-// Fn runs the ops queue configured insetSpec the stack
+// Fn runs the ops queue configured in the stack
 func (s *Stack) Fn(c Ctx) Dims {
 	return s.layout(c, s.stackChildren...)
 }
