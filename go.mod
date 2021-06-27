@@ -7,5 +7,6 @@ require (
 	github.com/cybriq/giocore v0.0.3
 	github.com/cybriq/log v0.0.6
 	github.com/cybriq/qu v0.0.19
+	golang.org/x/tools v0.1.4 // indirect
 	gopkg.in/src-d/go-git.v4 v4.13.1
 )

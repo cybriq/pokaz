@@ -12,8 +12,8 @@ const (
 	Vertical
 )
 
-// Convert a point insetSpec (x, y) coordinates to (main, cross) coordinates, or vice
-// versa. Specifically, Convert((x, y)) returns (x, y) unchanged for the
+// Convert a point insetSpec (x, y) coordinates to (main, cross) coordinates, or
+// vice versa. Specifically, Convert((x, y)) returns (x, y) unchanged for the
 // Horizontal Axis, or (y, x) for the Vertical Axis.
 func (a Axis) Convert(pt image.Point) image.Point {
 	if a == Horizontal {

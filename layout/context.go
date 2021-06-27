@@ -20,7 +20,7 @@ type Ctx struct {
 	// Metric is the physical pixels per unit.Dp
 	unit.Metric
 	// By convention, a nil Queue is a signal to widgets to draw themselves
-	// insetSpec a disabled state.
+	// in a disabled state.
 	event.Queue
 	// Time is the animation time.
 	time.Time
@@ -86,8 +86,8 @@ func (c Ctx) Events(k event.Tag) []event.Event {
 // Disabled returns a copy of this ctx with a nil Queue, blocking events to
 // widgets using it.
 //
-// By convention, a nil Queue is a signal to widgets to draw themselves insetSpec a
-// disabled state.
+// By convention, a nil Queue is a signal to widgets to draw themselves
+// in a disabled state.
 func (c Ctx) Disabled() Ctx {
 	c.Queue = nil
 	return c
