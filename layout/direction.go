@@ -30,7 +30,7 @@ var directions = []string{
 	"NW", "N", "NE", "E", "SE", "S", "SW", "W", "Center",
 }
 
-// String returns the name of the direction insetSpec string form
+// String returns the name of the direction in string form
 func (d Direction) String() string {
 	if d.Dir < NW || d.Dir >= endDirections {
 		panic("dir is out of bounds")
