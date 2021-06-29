@@ -26,10 +26,6 @@ type Ctx struct {
 	time.Time
 	// Ops are the collection of ops that accumulates during composition
 	*op.Ops
-	// Map is the tree structured data store calculating the bounds of
-	// the widgets and precalculated in a first pass before second pass
-	// paint. This map can be filtered to generate a new Ctx
-	Map
 }
 
 // NewCtx is a shorthand for
