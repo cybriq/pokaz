@@ -41,11 +41,10 @@ func (s *Stack) Fn(c Ctx) Dims {
 	return s.layout(c, s.stackChildren...)
 }
 
-// stack lays out stackChild elements on top of each other, according to an
-// alignment dir.
+// stack lays out stackChild elements on top of each other, according to an alignment
+// dir.
 type stack struct {
-	// alignment is the dir to align stackChildren smaller than the
-	// available space.
+	// alignment is the dir to align stackChildren smaller than the available space.
 	alignment Direction
 }
 
@@ -59,17 +58,17 @@ type stackChild struct {
 	dims Dims
 }
 
-// stacked returns a stack stackChild that is laid out with no minimum
-// constraints and maximum constraints passed to stack.layout.
+// stacked returns a stack stackChild that is laid out with no minimum constraints and
+// maximum constraints passed to stack.layout.
 func stacked(w Widget) stackChild {
 	return stackChild{
 		widget: w,
 	}
 }
 
-// expanded returns a stack stackChild with the minimum constraints set to the
-// largest stacked stackChild. The maximum constraints are set to the same as
-// passed to stack.layout.
+// expanded returns a stack stackChild with the minimum constraints set to the largest
+// stacked stackChild. The maximum constraints are set to the same as passed to
+// stack.layout.
 func expanded(w Widget) stackChild {
 	return stackChild{
 		expanded: true,
@@ -77,9 +76,8 @@ func expanded(w Widget) stackChild {
 	}
 }
 
-// layout a stack of stackChildren. The position of the stackChildren are
-// determined by the specified order, but stacked stackChildren are laid out
-// before expanded stackChildren.
+// layout a stack of stackChildren. The position of the stackChildren are determined by the
+// specified order, but stacked stackChildren are laid out before expanded stackChildren.
 func (s stack) layout(
 	gtx Ctx,
 	stackChildren ...stackChild,

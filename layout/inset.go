@@ -7,16 +7,13 @@ import (
 	"github.com/cybriq/giocore/unit"
 )
 
-// NewInset creates an inset with a give inset
-func NewInset(spec InsetSpec) *Inset {
-	return &Inset{
-		InsetSpec: spec,
+// NewInset creates a padded empty space around a widget
+func NewInset(pad float32, embed Widget) (out *Inset) {
+	out = &Inset{
+		insetSpec: uniform(unit.Sp(pad)),
+		w:         embed,
 	}
-}
-
-// NewUniformInset creates a uniform empty space around a widget
-func NewUniformInset(pad float32) (out *Inset) {
-	return NewInset(Uniform(unit.Dp(pad)))
+	return
 }
 
 // Embed sets the widget that will be inside the Inset
@@ -25,7 +22,7 @@ func (in *Inset) Embed(w Widget) *Inset {
 	return in
 }
 
-type InsetSpec struct {
+type insetSpec struct {
 	Top, Right, Bottom, Left unit.Value
 }
 
@@ -33,7 +30,7 @@ type InsetSpec struct {
 // minimum constraints will be adjusted to ensure they do not exceed the
 // maximum.
 type Inset struct {
-	InsetSpec
+	insetSpec
 	w Widget
 }
 
@@ -68,13 +65,12 @@ func (in Inset) Fn(gtx Ctx) Dims {
 	dm := in.w(gtx)
 	stack.Load()
 	return Dims{
-		Size: dm.Size.Add(
-			image.Point{X: right + left, Y: top + bottom}),
+		Size:     dm.Size.Add(image.Point{X: right + left, Y: top + bottom}),
 		Baseline: dm.Baseline + bottom,
 	}
 }
 
-// Uniform returns an Inset with a single inset applied to all edges.
-func Uniform(v unit.Value) InsetSpec {
-	return InsetSpec{Top: v, Right: v, Bottom: v, Left: v}
+// uniform returns an Inset with a single inset applied to all edges.
+func uniform(v unit.Value) insetSpec {
+	return insetSpec{Top: v, Right: v, Bottom: v, Left: v}
 }
