@@ -4,7 +4,7 @@ import (
 	"image"
 )
 
-// Axis defines the direction of a widget with multiple elements
+// Axis defines the dir of a widget with multiple elements
 type Axis uint8
 
 const (
@@ -12,7 +12,7 @@ const (
 	Vertical
 )
 
-// Convert a point in (x, y) coordinates to (main, cross) coordinates, or
+// Convert a point insetSpec (x, y) coordinates to (main, cross) coordinates, or
 // vice versa. Specifically, Convert((x, y)) returns (x, y) unchanged for the
 // Horizontal Axis, or (y, x) for the Vertical Axis.
 func (a Axis) Convert(pt image.Point) image.Point {

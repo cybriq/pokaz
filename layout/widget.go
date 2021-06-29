@@ -7,4 +7,3 @@ type Widget func(gtx Ctx) Dims
 type Widgeter interface {
 	Fn(Ctx) Dims
 }
-
