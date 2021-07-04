@@ -29,11 +29,25 @@ type Widget struct {
 	// its rendering function
 	painter func(w *Widget)
 	// Children are the widgets referred to in the functions above
-	Children []*Widget
+	Children WidgetChildren
+	// State is a type specific data structure used in specification and
+	// state functionality
+	State interface{}
 }
 
-// Map calls map on all the children and computes a widget dimension.
-// This calls Map on all Children and their Children etc, and sets it in
+type WidgetChildren map[string]*Widget
+
+func NewWidget(
+	mapper func(w *Widget) (d Dims),
+	painter func(w *Widget),
+) *Widget {
+	return &Widget{
+		Children: make(WidgetChildren),
+	}
+}
+
+// Map calls map on all the children and computes a widget dimension. This calls
+// Map on all WidgetChildren and their WidgetChildren etc, and sets it in
 // Dimensions above
 func (w *Widget) Map() (d *Dims) {
 	for i := range w.Children {
@@ -44,8 +58,8 @@ func (w *Widget) Map() (d *Dims) {
 	return w.Dimensions
 }
 
-// Paint returns the ops defined by the Widget and set by each Widget in
-// its rendering function
+// Paint returns the ops defined by the Widget and set by each Widget in its
+// rendering function
 func (w *Widget) Paint() (ops *op.Ops) {
 	if w.Zero == nil || w.Dimensions == nil {
 		w.Map()
@@ -66,12 +80,12 @@ func (w *Widget) Invalidate() {
 	}
 }
 
-// PropagateContext copies a new context to all child widgets, this needs to be
+// ResetContext copies a new context to all child widgets, this needs to be
 // called prior to calling Map or Paint at the beginning of a frame
-func (w *Widget) PropagateContext() {
+func (w *Widget) ResetContext(ctx Ctx) {
+	w.Ctx = ctx
 	for i := range w.Children {
-		w.Children[i].Ctx = w.Ctx
-		w.Children[i].PropagateContext()
+		w.Children[i].ResetContext(ctx)
 	}
 
 }
