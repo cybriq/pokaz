@@ -30,8 +30,9 @@ type FlexChild struct {
 	flex   bool
 	
 	// Scratch space.
-	call op.CallOp
-	dims Dims
+	call  op.CallOp
+	dims   Dims
+	offset image.Point
 }
 
 func HFlex() *Flex {
@@ -157,6 +158,7 @@ func FlexMap(w *Widget) (d Dims) {
 	crossMin, crossMax := fl.Axis.CrossConstraint(cs)
 	remaining := mainMax
 	var totalWeight float32
+	// Lay out rigid children.
 	for _, i := range fl.FlexChildren {
 		if i.flex {
 			totalWeight += i.weight
@@ -173,8 +175,8 @@ func FlexMap(w *Widget) (d Dims) {
 		}
 		i.dims = *dm
 	}
-	if w := fl.WeightSum; w != 0 {
-		totalWeight = w
+	if fl.WeightSum != 0 {
+		totalWeight = fl.WeightSum
 	}
 	// fraction is the rounding error from a flex weighting.
 	var fraction float32
@@ -235,6 +237,19 @@ func FlexMap(w *Widget) (d Dims) {
 	}
 	for i, child := range fl.FlexChildren {
 		dm := child.dims
+		b := dm.Size.Y - dm.Baseline
+		var cross int
+		switch fl.Alignment {
+		case End:
+			cross = maxCross - fl.Axis.Convert(dm.Size).Y
+		case Middle:
+			cross = (maxCross - fl.Axis.Convert(dm.Size).Y) / 2
+		case Baseline:
+			if fl.Axis == Horizontal {
+				cross = maxBaseline - b
+			}
+		}
+		child.offset = fl.Axis.Convert(image.Pt(mainSize, cross))
 		mainSize += fl.Axis.Convert(dm.Size).X
 		if i < len(fl.FlexChildren)-1 {
 			switch fl.Spacing {
