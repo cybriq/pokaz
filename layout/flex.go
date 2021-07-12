@@ -52,7 +52,10 @@ func (f *Flex) Rigid(w ...Widget) (out *Flex) {
 // Flexed inserts a string of flexed widgets into the flex
 func (f *Flex) Flexed(weight float32, w ...Widget) (out *Flex) {
 	for i := range w {
-		f.children = append(f.children, flexed(weight/float32(len(w)), w[i]))
+		f.children = append(
+			f.children,
+			flexed(weight/float32(len(w)), w[i]),
+		)
 	}
 	return f
 }
@@ -61,7 +64,6 @@ func (f *Flex) Flexed(weight float32, w ...Widget) (out *Flex) {
 func (f *Flex) Fn(c Ctx) Dims {
 	return f.layout(c, f.children...)
 }
-
 
 // flex lays out child elements along an axis, according to alignment and
 // weights.
