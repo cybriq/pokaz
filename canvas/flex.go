@@ -30,9 +30,10 @@ type FlexChild struct {
 	flex   bool
 	
 	// Scratch space.
-	call  op.CallOp
+	call   op.CallOp
 	dims   Dims
 	offset image.Point
+	lim    Lim
 }
 
 func HFlex() *Flex {
@@ -164,7 +165,7 @@ func FlexMap(w *Widget) (d Dims) {
 			totalWeight += i.weight
 			continue
 		}
-		fl.Ctx.Lim = fl.Axis.
+		i.Lim = fl.Axis.
 			Constraints(0, remaining, crossMin, crossMax)
 		dm := i.Map()
 		sz := fl.Axis.Convert(dm.Size).X
@@ -182,24 +183,25 @@ func FlexMap(w *Widget) (d Dims) {
 	var fraction float32
 	flexTotal := remaining
 	// Lay out flexed children.
-	for i, child := range fl.FlexChildren {
-		if !child.flex {
+	for i := range fl.FlexChildren {
+		if !fl.FlexChildren[i].flex {
 			continue
 		}
 		var flexSize int
 		if remaining > 0 && totalWeight > 0 {
 			// Apply weight and add any leftover fraction from a
 			// previous flexed.
-			childSize := float32(flexTotal) * child.weight / totalWeight
+			childSize := float32(flexTotal) *
+				fl.FlexChildren[i].weight / totalWeight
 			flexSize = int(childSize + fraction + .5)
 			fraction = childSize - float32(flexSize)
 			if flexSize > remaining {
 				flexSize = remaining
 			}
 		}
-		fl.Ctx.Lim = fl.Axis.
+		fl.FlexChildren[i].Lim = fl.Axis.
 			Constraints(flexSize, flexSize, crossMin, crossMax)
-		dm := child.Map()
+		dm := fl.FlexChildren[i].Map()
 		sz := fl.Axis.Convert(dm.Size).X
 		size += sz
 		remaining -= sz
