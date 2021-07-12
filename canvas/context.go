@@ -2,7 +2,7 @@ package canvas
 
 import (
 	"time"
-
+	
 	"github.com/cybriq/giocore/f32"
 	"github.com/cybriq/giocore/io/event"
 	"github.com/cybriq/giocore/io/system"
@@ -39,11 +39,12 @@ type Ctx struct {
 //   }
 //
 // NewCtx calls ops.Reset and adjusts ops for e.Insets.
-func NewCtx(ops *op.Ops, e system.FrameEvent) Ctx {
+func NewCtx(ops *op.Ops, e system.FrameEvent, dppx, sppx float32) Ctx {
+	
 	ops.Reset()
-
+	
 	size := e.Size
-
+	
 	if e.Insets != (system.Insets{}) {
 		left := e.Metric.Px(e.Insets.Left)
 		top := e.Metric.Px(e.Insets.Top)
@@ -53,16 +54,16 @@ func NewCtx(ops *op.Ops, e system.FrameEvent) Ctx {
 				Y: float32(top),
 			},
 		).Add(ops)
-
+		
 		size.X -= left + e.Metric.Px(e.Insets.Right)
 		size.Y -= top + e.Metric.Px(e.Insets.Bottom)
 	}
-
+	
 	return Ctx{
 		Ops:    ops,
 		Time:   e.Now,
 		Queue:  e.Queue,
-		Metric: e.Metric,
+		Metric: unit.Metric{PxPerDp: dppx, PxPerSp: sppx},
 		Lim:    Exact(size),
 	}
 }
