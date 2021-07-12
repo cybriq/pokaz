@@ -2,7 +2,7 @@ package canvas
 
 import (
 	"image"
-
+	
 	"github.com/cybriq/giocore/op"
 )
 
@@ -43,11 +43,13 @@ func NewWidget(
 ) *Widget {
 	return &Widget{
 		Children: make(WidgetChildren),
+		mapper:   mapper,
+		painter:  painter,
 	}
 }
 
 // Map calls map on all the children and computes a widget dimension. This calls
-// Map on all WidgetChildren and their WidgetChildren etc, and sets it in
+// Map on all WidgetChildren and their WidgetChildren etc., and sets it in
 // Dimensions above
 func (w *Widget) Map() (d *Dims) {
 	for i := range w.Children {
@@ -87,5 +89,5 @@ func (w *Widget) ResetContext(ctx Ctx) {
 	for i := range w.Children {
 		w.Children[i].ResetContext(ctx)
 	}
-
+	
 }
